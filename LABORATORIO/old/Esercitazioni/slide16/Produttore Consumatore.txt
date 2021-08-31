@@ -1,0 +1,95 @@
+• Uno o più produttori (thread o processi) creano elementi che sono elaborati successivamente da uno o più consumatori (thread o processi)
+• Gli elementi sono passati tra i produttori e i consumatori usando qualche forma di IPC
+• Quando si usa memoria condivisa come forma di IPC tra il produttore ed il consumatore è necessaria una forma appropriata di sincronizzazione
+• Cominciamo utilizzando i mutex
+• Consideriamo thread multipli produttori ed un singolo thread
+consumatore in un singolo processo
+• Un array di interi buff contiene gli elementi prodotti e consumati (i dati condivisi)
+• Assumiamo che i produttori si limitano ad impostare buff[0]
+a 0, buff[1] a 1 e così via
+• Assumiamo che il consumatore accede all’array e verifica che ciascuna entrata sia corretta
+• In questo primo esempio ci limitiamo a sincronizzare solo i thread produttori (non avviamo il thread consumatore fino a che tutti i produttori hanno finito)
+
+#include ...
+#define MAXNITEMS 1000000
+#define MAXNTHREADS 100
+int nitems; //sola lettura per prod. e cons.
+struct { 
+pthread_mutex_t	mutex; 
+int  buff[MAXNITEMS]; 
+int nput;
+int nval;
+} shared = { PTHREAD_MUTEX_INITIALIZER };
+void   *produce(void *), *consume(void *);
+
+
+• Le raggruppiamo in una struttura chiamata shared insieme al mutex per sottolineare che a queste variabili si accede solo quando il mutex è bloccato (acquisito)
+• nput è il prossimo indice in cui bisogna memorizzare nell’array buff
+• nval è il prossimo valore da memorizzare (0,1,2..)
+• La struttura è allocata ed il mutex è inizializzato per sincronizzare i thread produttori
+
+int main(int argc, char **argv)
+{
+int i, nthreads, count[MAXNTHREADS]; 
+pthread_t tid_produce[MAXNTHREADS], tid_consume; 
+if (argc != 3){
+printf("usage: prodcons <#items> <#threads>");
+exit(-1);
+} 
+nitems = MIN(atoi(argv[1]), MAXNITEMS);
+nthreads = MIN(atoi(argv[2]), MAXNTHREADS);
+/* inizia tutti i thread produttore */ 
+for (i = 0; i < nthreads; i++) {
+count[i] = 0;
+pthread_create(&tid_produce[i], NULL, produce, &count[i]);
+}
+/* aspetta tutti i thread produttore */ 
+for (i = 0; i < nthreads; i++) {
+pthread_join(tid_produce[i], NULL); 
+printf("count[%d] = %d\n", i, count[i]);
+}
+/* inizia e poi aspetta il thread consumatore */ 
+pthread_create(&tid_consume, NULL, consume, NULL);
+pthread_join(tid_consume, NULL);
+exit(0);
+
+• Creazione thread produttori
+• I thread produttori sono creati ed ognuno esegue la funzione produc
+• L’argomento per ogni produttore è un puntatore ad un elemento dell’array counter
+• Prima si inizializza il contatore a 0 e ogni thread incrementa questo contatore ogni volta che memorizza un elemento nel buffer
+• Aspettiamo che tutti i thread produttori terminino e dopo si avvia il thread consumatore
+• Aspettiamo che il consumatore finisca e terminiamo
+
+void *produce(void *arg)
+{
+for ( ; ; ) {
+pthread_mutex_lock(&shared.mutex); 
+if (shared.nput >= nitems) {
+pthread_mutex_unlock(&shared.mutex); 
+return(NULL); 
+/* array pieno */
+}
+shared.buff[shared.nput] = shared.nval; 
+shared.nput++;
+shared.nval++; 
+pthread_mutex_unlock(&shared.mutex);
+*((int *) arg) += 1;
+}
+}
+
+• La regione critica per i produttori consiste nel verificare se il buffer è pieno
+• Proteggiamo questa porzione di codice con il mutex, assicurandoci di sbloccarlo appena finito il controllo e l’esecuzione delle relative istruzioni
+• Osserviamo che l’incremento dell’elemento count (attraverso arg) non fa parte della regione critica perché ogni thread ha il proprio contatore (una locazione dell’array count nella funzione main)
+
+void * consume(void *arg)
+{
+int i;
+for (i = 0; i < nitems; i++) { 
+if (shared.buff[i] != i)
+printf("buff[%d] = %d\n", i, shared.buff[i]);
+}
+return(NULL);
+}
+
+• Il consumatore verifica il contenuto dell’array controllando che ogni elemento dell’array è corretto e stampa un messaggio in caso di errore
+

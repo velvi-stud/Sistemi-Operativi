@@ -1,0 +1,22 @@
+#!/bin/bash func2 () {
+# Scrivere una funzione che ritorni il numero di parametri (massimo due) con cui è stata “chiamata”
+if [ -z “$1” ]
+# vediamo se ci sono parametri then
+echo "nessun parametro passato alla funzione" 
+return 0
+else
+echo "il primo parametro passato è ... $1."
+fi
+if [ -n “$2” ] then
+echo "il secondo parametro passato è ... $2."
+fi
+}
+#richiamo la funzione con nessun parametro func2
+echo " altro caso"
+#richiamo la funzione con un parametro 
+func2 Primo
+echo "altro caso"
+#richiamo la funzione con due parametri 
+func2 Primo Secondo
+echo "stop" 
+exit 0

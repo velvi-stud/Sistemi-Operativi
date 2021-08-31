@@ -1,0 +1,33 @@
+intro
+I mutex sono per il locking e una variabile condizione è per l’attesa
+• Sono due tipi differenti di sincronizzazione
+• E’ necessario scegliere la “condizione” da aspettare e notificare
+• Questa è testata nel codice
+• Ad una variabile condizione è sempre associato un mutex
+• Quando chiamiamo pthread_cond_wait() per attendere che qualche condizione sia vera, specifichiamo l’indirizzo della variabile condizione e l’indirizzo del corrispondente mutex
+
+var cond.
+•Illustriamo l’uso delle variabili condizione modificando il codice del produttore-consumatore visto in precedenza
+•Le due variabili nput ed nval sono associate con il mutex, e mettiamo tutte e tre le variabili in una struttura chiamata put
+•struttura usata dai produttori
+•L’altra struttura, nready, contiene un contatore, una variabile condizione e un mutex. Inizializziamo la variabile condizione a PTHREAD_COND_INIZIALIZER e PTHREAD_MUTEX_INIZIALIZER
+
+producer
+•Usiamo il mutex put.mutex per bloccare la sezione critica quando il produttore pone un nuovo elemento nell’array
+•Incrementiamo il contatore nready.nready che conta il numero di elementi pronti per il thread consumatore
+•Prima dell’incremento, se il valore del contatore era 0, chiamiamo pthread_cond_signal per risvegliare un qualsiasi thread (l’unico) consumatore in attesa che tale valore diventi diverso da 0
+•Possiamo vedere l’interazione del mutex e della variabile condizione associati al contatore (nready)
+•Il contatore è condiviso tra i produttori e il consumatore quindi l’accesso deve avvenire quando il mutex associato (nready.mutex) è bloccato
+•La variabile condizione è usata per aspettare e segnalare
+
+Consumer
+•Il consumatore aspetta che nready.nready sia diverso da zero
+•Poiché esso è condiviso tra i produttori ed il consumatore, possiamo testare il suo valore solo mentre il mutex associato è bloccato
+•Se, mentre il mutex è bloccato, il valore è 0, chiamiamo pthread_cond_wait() per attendere. Ciò effettua due azioni in modo atomico:
+•Il mutex nready.mutex è sbloccato e
+•Il thread è messo in attesa fino a che qualche altro thread chiama pthread_cond_signal() per questa variabile condizione
+•Prima di ritornare, phtread_cond_wait blocca il mutex nready.mutex
+•quando ritorna e troviamo che il contatore è diverso da zero, decrementiamo il contatore (sapendo che il mutex è bloccato) e poi sblocchiamo il mutex
+•In questa implementazione, la variabile che mantiene la condizione è un contatore intero e l’impostazione della condizione è semplicemente l’incremento del contatore
+•In questo caso si è ottimizzato il codice in modo che il segnale si verifica solo quando il contatore va da 0 a 1
+

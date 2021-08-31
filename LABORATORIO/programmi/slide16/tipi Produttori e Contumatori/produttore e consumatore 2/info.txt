@@ -1,0 +1,17 @@
+Vogliamo dimostrare che i mutex sono appropriati per il locking e non altrettanto per il waiting (attesa)
+•Modifichiamo l’esempio del produttore-consumatore precedente ed avviamo il thread consumatore appena dopo che i thread produttori sono stati avviati
+•Ciò consente al consumatore di elaborare i dati non appena questi sono generati dai produttori
+•Dobbiamo sincronizzare il consumatore con i produttori per essere certi che il consumatore elabori solo i dati che sono già stati memorizzati dai produttori
+
+
+•Il consumatore deve aspettare
+•La funzione consume chiama consume_wait prima di prelevare il prossimo elemento dall’array
+•La funzione consume_wait deve attendere fino a che i produttori hanno generato l’i-esimo elemento
+•Per controllare questa condizione, il mutex del produttore è bloccato ed i è confrontato con l’indice nput del produttore
+•Dobbiamo acquisire il blocco del mutex prima di controllare nput poiché questa variabile può essere in corso di aggiornamento da uno dei thread produttori
+
+
+•La questione fondamentale è: cosa possiamo fare quando l’elemento non è disponibile?
+•Effettuiamo un ciclo sbloccando e bloccando il mutex ogni volta
+•Questa operazione è denominata polling e comporta un notevole spreco di tempo di CPU
+•Abbiamo bisogno di un altro tipo di sincronizzazione che consenta ai thread di dormire fino a che si verifichi qualche evento BISOGNA MIGLIORARLO

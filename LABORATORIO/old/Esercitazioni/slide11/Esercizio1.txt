@@ -1,0 +1,1 @@
+//scrivere un programma che esegua il comando di shell “ls- R | grep <pat>” dove <pat> è un pattern inserito dall’utente

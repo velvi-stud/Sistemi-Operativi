@@ -1,0 +1,10 @@
+ps aux > processi
+
+ps -> vede processi
+aux -> tutti processi
+> -> stampa dove
+< -> prendi dove
+
+0 -> std file input 
+1 -> std file output
+2 -> std file error

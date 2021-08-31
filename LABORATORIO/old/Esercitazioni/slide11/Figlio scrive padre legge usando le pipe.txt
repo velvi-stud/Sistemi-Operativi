@@ -1,0 +1,22 @@
+#include <stdio.h> 
+#include <string.h> 
+#define READ 0
+#define WRITE 1
+char *frase = "Messaggio...”; 
+
+int main() {
+int fd[2], bytesRead;
+char message[100];
+pipe(fd); 
+if(fork() == 0) { /*figlio*/
+close(fd[READ]); 
+write(fd[WRITE],frase,strlen(frase)+1); 
+lose(fd[WRITE]);
+}
+else { /*padre*/
+close(fd[WRITE]);
+bytesRead=read(fd[READ],message,100);
+printf("Letti %d byte: %s\n", bytesRead, message);
+close(fd[READ]);
+}
+}

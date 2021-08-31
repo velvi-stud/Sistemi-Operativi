@@ -1,0 +1,7 @@
+touch newfile
+ln newfile newfile-hard
+ln -s newfile newfile-soft
+
+touch -> crea nuovo file
+ln -> crea il file hard (copia paro paro bit a bit il file)
+ln -s -> crea il file soft (fa solo una shortcut del file)

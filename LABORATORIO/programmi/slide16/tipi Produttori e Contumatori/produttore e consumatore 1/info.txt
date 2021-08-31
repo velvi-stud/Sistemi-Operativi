@@ -1,0 +1,26 @@
+• Uno o più produttori (thread o processi) creano elementi che sono elaborati successivamente da uno o più consumatori (thread o processi)
+• Gli elementi sono passati tra i produttori e i consumatori usando qualche forma di IPC
+• Quando si usa memoria condivisa come forma di IPC tra il produttore ed il consumatore è necessaria una forma appropriata di sincronizzazione
+    • Cominciamo utilizzando i mutex
+• Consideriamo thread multipli produttori ed un singolo thread consumatore in un singolo processo (N Produttori 1 consumatore)
+• Un array di interi buff contiene gli elementi prodotti e consumati (i dati condivisi)
+• Assumiamo che i produttori si limitano ad impostare buff[0] a 0, buff[1] a 1 e così via
+• Assumiamo che il consumatore accede all’array e verifica che ciascuna entrata sia corretta
+• In questo primo esempio ci limitiamo a sincronizzare solo i thread produttori (non avviamo il thread consumatore fino a che tutti i produttori hanno finito)
+
+
+
+• Le raggruppiamo in una struttura chiamata shared insieme al mutex per sottolineare che a queste variabili si accede solo quando il mutex è bloccato (acquisito)
+• nput è il prossimo indice in cui bisogna memorizzare nell’array buff
+• nval è il prossimo valore da memorizzare (0,1,2..)
+• La struttura è allocata ed il mutex è inizializzato per sincronizzare i thread produttori
+
+
+
+• La regione critica per i produttori consiste nel verificare se il buffer è pieno
+• Proteggiamo questa porzione di codice con il mutex, assicurandoci di sbloccarlo appena finito il controllo e l’esecuzione delle relative istruzioni
+• Osserviamo che l’incremento dell’elemento count (attraverso arg) non fa parte della regione critica perché ogni thread ha il proprio contatore (una locazione dell’array count nella funzione main)
+
+
+
+• Il consumatore verifica il contenuto dell’array controllando che ogni elemento dell’array è corretto e stampa un messaggio in caso di errore

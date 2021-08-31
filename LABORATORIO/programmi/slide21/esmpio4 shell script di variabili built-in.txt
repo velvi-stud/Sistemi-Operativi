@@ -1,0 +1,12 @@
+#!/bin/bash salutation=“Hello” echo $salutation
+echo “Ora è in esecuzione il programma $0” 
+echo “Il secondo parametro era $2”
+echo “Il primo parametro era $1” 
+echo “La lista dei parametri era $*”
+echo “La home directory dell’utente è $HOME”
+
+echo “Inserire un nuovo saluto” read salutation
+echo $salutation
+echo “Script completato” exit 0
+
+#per avviarlo $ ./prova_var foo bar baz 

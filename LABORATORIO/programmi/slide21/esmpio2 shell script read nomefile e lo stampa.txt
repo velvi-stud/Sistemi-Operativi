@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "quali file vuoi visualizzare?" read nome_file
+ls –l $nome_file
+
+/*
+Per eseguire correttamente questo script lo si scriva in un file denominato prova.sh, si cambino i permessi  mediante chmod (chmod +x prova.sh) e lo si esegua nel modo che segue : ./prova.sh
+*/

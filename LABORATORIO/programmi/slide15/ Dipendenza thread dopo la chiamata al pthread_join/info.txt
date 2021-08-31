@@ -1,0 +1,6 @@
+
+PROVA DELLA DIPENDENZA DEI THREAD NELLO SPAZIO DI INDIRIZZAMENTO 
+ESSENDO LA MEMORIA CONDIVISA
+
+nel main -> usa lo stack -> dopo la pthread_join e l'invocazione di un altro thread va sovrascritto (perso)
+globale mentre si esegue un malloc -> usa l'heap -> dopo la pthread_join e l'invocazione di un altro thread non va sovrascritto

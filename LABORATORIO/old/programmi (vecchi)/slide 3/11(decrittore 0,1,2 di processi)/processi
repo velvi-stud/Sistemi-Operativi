@@ -1,0 +1,259 @@
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.2 225456  9068 ?        Ss   08:30   0:02 /sbin/init splash
+root         2  0.0  0.0      0     0 ?        S    08:30   0:00 [kthreadd]
+root         4  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/0:0H]
+root         6  0.0  0.0      0     0 ?        I<   08:30   0:00 [mm_percpu_wq]
+root         7  0.0  0.0      0     0 ?        S    08:30   0:00 [ksoftirqd/0]
+root         8  0.0  0.0      0     0 ?        I    08:30   0:15 [rcu_sched]
+root         9  0.0  0.0      0     0 ?        I    08:30   0:00 [rcu_bh]
+root        10  0.0  0.0      0     0 ?        S    08:30   0:00 [migration/0]
+root        11  0.0  0.0      0     0 ?        S    08:30   0:00 [watchdog/0]
+root        12  0.0  0.0      0     0 ?        S    08:30   0:00 [cpuhp/0]
+root        13  0.0  0.0      0     0 ?        S    08:30   0:00 [cpuhp/1]
+root        14  0.0  0.0      0     0 ?        S    08:30   0:00 [watchdog/1]
+root        15  0.0  0.0      0     0 ?        S    08:30   0:00 [migration/1]
+root        16  0.0  0.0      0     0 ?        S    08:30   0:00 [ksoftirqd/1]
+root        18  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/1:0H]
+root        19  0.0  0.0      0     0 ?        S    08:30   0:00 [cpuhp/2]
+root        20  0.0  0.0      0     0 ?        S    08:30   0:00 [watchdog/2]
+root        21  0.0  0.0      0     0 ?        S    08:30   0:00 [migration/2]
+root        22  0.0  0.0      0     0 ?        S    08:30   0:00 [ksoftirqd/2]
+root        24  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/2:0H]
+root        25  0.0  0.0      0     0 ?        S    08:30   0:00 [cpuhp/3]
+root        26  0.0  0.0      0     0 ?        S    08:30   0:00 [watchdog/3]
+root        27  0.0  0.0      0     0 ?        S    08:30   0:00 [migration/3]
+root        28  0.0  0.0      0     0 ?        S    08:30   0:00 [ksoftirqd/3]
+root        30  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/3:0H]
+root        31  0.0  0.0      0     0 ?        S    08:30   0:00 [kdevtmpfs]
+root        32  0.0  0.0      0     0 ?        I<   08:30   0:00 [netns]
+root        33  0.0  0.0      0     0 ?        S    08:30   0:00 [rcu_tasks_kthre]
+root        34  0.0  0.0      0     0 ?        S    08:30   0:00 [kauditd]
+root        37  0.0  0.0      0     0 ?        I    08:30   0:03 [kworker/2:1]
+root        38  0.0  0.0      0     0 ?        S    08:30   0:00 [khungtaskd]
+root        39  0.0  0.0      0     0 ?        S    08:30   0:00 [oom_reaper]
+root        40  0.0  0.0      0     0 ?        I<   08:30   0:00 [writeback]
+root        41  0.0  0.0      0     0 ?        S    08:30   0:00 [kcompactd0]
+root        42  0.0  0.0      0     0 ?        SN   08:30   0:00 [ksmd]
+root        43  0.0  0.0      0     0 ?        SN   08:30   0:00 [khugepaged]
+root        44  0.0  0.0      0     0 ?        I<   08:30   0:00 [crypto]
+root        45  0.0  0.0      0     0 ?        I<   08:30   0:00 [kintegrityd]
+root        46  0.0  0.0      0     0 ?        I<   08:30   0:00 [kblockd]
+root        47  0.0  0.0      0     0 ?        I<   08:30   0:00 [ata_sff]
+root        48  0.0  0.0      0     0 ?        I<   08:30   0:00 [md]
+root        49  0.0  0.0      0     0 ?        I<   08:30   0:00 [edac-poller]
+root        50  0.0  0.0      0     0 ?        I<   08:30   0:00 [devfreq_wq]
+root        51  0.0  0.0      0     0 ?        I<   08:30   0:00 [watchdogd]
+root        55  0.0  0.0      0     0 ?        S    08:30   0:00 [kswapd0]
+root        56  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/u9:0]
+root        57  0.0  0.0      0     0 ?        S    08:30   0:00 [ecryptfs-kthrea]
+root        99  0.0  0.0      0     0 ?        I<   08:30   0:00 [kthrotld]
+root       100  0.0  0.0      0     0 ?        I<   08:30   0:00 [acpi_thermal_pm]
+root       101  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_0]
+root       102  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_0]
+root       103  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_1]
+root       104  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_1]
+root       110  0.0  0.0      0     0 ?        I<   08:30   0:00 [ipv6_addrconf]
+root       119  0.0  0.0      0     0 ?        I<   08:30   0:00 [kstrp]
+root       136  0.0  0.0      0     0 ?        I<   08:30   0:00 [charger_manager]
+root       740  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_2]
+root       741  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_2]
+root       742  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_3]
+root       743  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_3]
+root       744  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_4]
+root       745  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_4]
+root       746  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_5]
+root       747  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_5]
+root       748  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_6]
+root       749  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_6]
+root       750  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_7]
+root       751  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_7]
+root       752  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_8]
+root       753  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_8]
+root       754  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_9]
+root       755  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_9]
+root       756  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_10]
+root       757  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_10]
+root       758  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_11]
+root       759  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_11]
+root       760  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_12]
+root       761  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_12]
+root       762  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_13]
+root       763  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_13]
+root       764  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_14]
+root       765  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_14]
+root       766  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_15]
+root       767  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_15]
+root       768  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_16]
+root       769  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_16]
+root       770  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_17]
+root       771  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_17]
+root       772  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_18]
+root       773  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_18]
+root       774  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_19]
+root       775  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_19]
+root       776  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_20]
+root       777  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_20]
+root       778  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_21]
+root       779  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_21]
+root       780  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_22]
+root       781  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_22]
+root       782  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_23]
+root       783  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_23]
+root       784  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_24]
+root       785  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_24]
+root       786  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_25]
+root       787  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_25]
+root       788  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_26]
+root       789  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_26]
+root       790  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_27]
+root       791  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_27]
+root       792  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_28]
+root       793  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_28]
+root       794  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_29]
+root       795  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_29]
+root       796  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_30]
+root       797  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_30]
+root       798  0.0  0.0      0     0 ?        S    08:30   0:00 [scsi_eh_31]
+root       799  0.0  0.0      0     0 ?        I<   08:30   0:00 [scsi_tmf_31]
+root       807  0.0  0.0      0     0 ?        I<   08:30   0:00 [ttm_swap]
+root       855  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/1:1H]
+root      1014  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/0:1H]
+root      1016  0.0  0.0      0     0 ?        I<   08:30   0:00 [kworker/3:1H]
+root      1158  0.0  0.0      0     0 ?        S    08:30   0:01 [jbd2/sda1-8]
+root      1159  0.0  0.0      0     0 ?        I<   08:30   0:00 [ext4-rsv-conver]
+root      1207  0.0  0.3  95032 14596 ?        S<s  08:30   0:01 /lib/systemd/systemd-journald
+root      1221  0.0  0.0      0     0 ?        I<   08:30   0:00 [rpciod]
+root      1223  0.0  0.0      0     0 ?        I<   08:30   0:00 [xprtiod]
+root      1227  0.0  0.0  97708  1880 ?        Ss   08:30   0:00 /sbin/lvmetad -f
+root      1228  0.0  0.1  47628  5900 ?        Ss   08:30   0:00 /lib/systemd/systemd-udevd
+root      1231  0.0  0.0      0     0 ?        I<   08:30   0:01 [kworker/2:1H]
+root      1573  0.0  0.0  47600  3624 ?        Ss   08:30   0:00 /sbin/rpcbind -f -w
+systemd+  1574  0.0  0.1  70880  6396 ?        Ss   08:30   0:01 /lib/systemd/systemd-resolved
+root      1732  0.0  0.0      0     0 ?        I<   08:30   0:00 [iprt-VBoxWQueue]
+root      1873  0.0  0.2 206540 11388 ?        Ss   08:30   0:00 /usr/sbin/sssd -i --logger=files
+root      1880  0.0  0.0   4552   892 ?        Ss   08:30   0:04 /usr/sbin/acpid
+root      1882  0.0  0.2 502804 10268 ?        Ssl  08:30   0:00 /usr/lib/udisks2/udisksd
+root      1979  0.0  0.2 434324  9520 ?        Ssl  08:30   0:00 /usr/sbin/ModemManager --filter-policy=strict
+root      1980  0.0  0.0 110408  2112 ?        Ssl  08:30   0:01 /usr/sbin/irqbalance --foreground
+syslog    1981  0.0  0.1 275284  4588 ?        Ssl  08:30   0:00 /usr/sbin/rsyslogd -n
+avahi     1983  0.0  0.0  59508  3444 ?        Ss   08:30   0:00 avahi-daemon: running [aulainfo-VirtualBox.local]
+root      1995  0.0  0.0  31328  3160 ?        Ss   08:30   0:00 /usr/sbin/cron -f
+message+  1996  0.0  0.1  78164  6168 ?        Ss   08:30   0:05 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+avahi     2331  0.0  0.0  59324   348 ?        S    08:30   0:00 avahi-daemon: chroot helper
+root      2344  0.0  0.1  45224  5376 ?        Ss   08:30   0:00 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+root      2346  0.0  0.4 632736 17212 ?        Ssl  08:30   0:02 /usr/sbin/NetworkManager --no-daemon
+root      2350  0.0  0.4 170540 17616 ?        Ssl  08:30   0:00 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+root      2410  0.0  0.2 315752 11228 ?        Ssl  08:30   0:01 /usr/lib/policykit-1/polkitd --no-debug
+root      2482  0.0  0.3 205260 12524 ?        S    08:30   0:01 /usr/lib/x86_64-linux-gnu/sssd/sssd_be --domain implicit_files --uid 0 --gid 0 --logger=files
+root      2539  0.0  0.8 201928 35600 ?        S    08:30   0:00 /usr/lib/x86_64-linux-gnu/sssd/sssd_nss --uid 0 --gid 0 --logger=files
+root      2546  0.0  0.1  72296  5772 ?        Ss   08:30   0:00 /usr/sbin/sshd -D
+root      2550  0.0  0.1 287916  7320 ?        Ssl  08:30   0:01 /usr/lib/accountsservice/accounts-daemon
+root      2552  0.0  0.1  70656  6144 ?        Ss   08:30   0:03 /lib/systemd/systemd-logind
+root      2594  0.0  0.1 290524  6840 ?        SLsl 08:30   0:00 /usr/sbin/lightdm
+root      2614  0.0  0.0 313856  2568 ?        Sl   08:30   0:14 /usr/sbin/VBoxService --pidfile /var/run/vboxadd-service.sh
+root      2636  3.1 23.7 1701512 960188 tty7   Ssl+ 08:30  15:24 /usr/lib/xorg/Xorg -core :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+root      2640  0.0  0.0  58996  3460 ?        Ssl  08:30   0:00 /usr/sbin/automount --pid-file /var/run/autofs.pid
+kernoops  2649  0.0  0.0  56936   420 ?        Ss   08:30   0:00 /usr/sbin/kerneloops --test
+kernoops  2651  0.0  0.0  56936  2672 ?        Ss   08:30   0:00 /usr/sbin/kerneloops
+root      2652  0.0  0.0  16188  1976 tty1     Ss+  08:30   0:00 /sbin/agetty -o -p -- \u --noclear tty1 linux
+root      2884  0.0  0.2 315356  8568 ?        Ssl  08:30   0:00 /usr/lib/upower/upowerd
+root      2891  0.0  0.1 291640  7900 ?        Sl   08:30   0:00 lightdm --session-child 12 19
+aulainfo  2932  0.0  0.2  76856  8144 ?        Ss   08:31   0:00 /lib/systemd/systemd --user
+aulainfo  2933  0.0  0.0 155020  2836 ?        S    08:31   0:00 (sd-pam)
+aulainfo  2950  0.0  0.1 281596  7848 ?        Sl   08:31   0:00 /usr/bin/gnome-keyring-daemon --daemonize --login
+aulainfo  2953  0.0  0.8 487368 33020 ?        Ssl  08:31   0:02 cinnamon-session --session cinnamon
+aulainfo  2968  0.0  0.1  63288  5728 ?        Ss   08:31   0:07 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+aulainfo  3021  0.0  0.0  51968   324 ?        S    08:31   0:00 /usr/bin/VBoxClient --clipboard
+aulainfo  3023  0.0  0.1 120356  4500 ?        Sl   08:31   0:00 /usr/bin/VBoxClient --clipboard
+aulainfo  3031  0.0  0.0  51968   324 ?        S    08:31   0:00 /usr/bin/VBoxClient --display
+aulainfo  3033  0.0  0.0  52104  3560 ?        S    08:31   0:00 /usr/bin/VBoxClient --display
+aulainfo  3038  0.0  0.0  51968   328 ?        S    08:31   0:00 /usr/bin/VBoxClient --seamless
+aulainfo  3040  0.0  0.0 118152  2260 ?        Sl   08:31   0:00 /usr/bin/VBoxClient --seamless
+aulainfo  3045  0.0  0.0  51968   324 ?        S    08:31   0:00 /usr/bin/VBoxClient --draganddrop
+aulainfo  3046  0.4  0.0 118668  2328 ?        Sl   08:31   2:11 /usr/bin/VBoxClient --draganddrop
+aulainfo  3056  0.0  0.0  11304   320 ?        Ss   08:31   0:00 /usr/bin/ssh-agent /usr/bin/im-launch cinnamon-session-cinnamon
+aulainfo  3068  0.0  0.1 349428  6416 ?        Ssl  08:31   0:00 /usr/lib/at-spi2-core/at-spi-bus-launcher
+aulainfo  3073  0.0  0.1  62572  4664 ?        S    08:31   0:02 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+aulainfo  3075  0.0  0.1 220772  6856 ?        Sl   08:31   0:11 /usr/lib/at-spi2-core/at-spi2-registryd --use-gnome-session
+aulainfo  3087  0.0  0.5 484424 21716 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-xrandr
+aulainfo  3088  0.0  0.5 397596 20908 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-a11y-settings
+aulainfo  3089  0.0  0.5 446060 23564 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-print-notifications
+aulainfo  3090  0.0  0.5 545076 20640 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-orientation
+aulainfo  3091  0.0  0.5 649128 22244 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-color
+aulainfo  3092  0.0  0.5 399036 22772 ?        Sl   08:31   0:02 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-xsettings
+aulainfo  3093  0.0  0.5 397528 20792 ?        Sl   08:31   0:02 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-housekeeping
+aulainfo  3094  0.0  0.5 321368 20336 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-cursor
+aulainfo  3099  0.0  0.8 777092 32676 ?        Sl   08:31   0:03 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-power
+aulainfo  3100  0.0  0.5 395124 20660 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-screensaver-proxy
+aulainfo  3101  0.0  0.5 397552 20920 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-a11y-keyboard
+aulainfo  3102  0.0  0.7 448312 30008 ?        Sl   08:31   0:03 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-background
+aulainfo  3103  0.0  0.6 841084 24240 ?        Sl   08:31   0:02 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-sound
+aulainfo  3104  0.0  0.5 780204 23876 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-media-keys
+aulainfo  3105  0.0  0.5 447816 23444 ?        Sl   08:31   0:10 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-keyboard
+aulainfo  3106  0.0  0.5 321376 20404 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-clipboard
+aulainfo  3112  0.0  0.5 397544 20704 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-mouse
+aulainfo  3141  0.0  0.5 475648 21304 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-automount
+aulainfo  3149  0.0  0.1 285172  7516 ?        Ssl  08:31   0:00 /usr/lib/gvfs/gvfsd
+aulainfo  3157  0.0  0.1 416112  5356 ?        Sl   08:31   0:00 /usr/lib/gvfs/gvfsd-fuse /run/user/1000/gvfs -f -o big_writes
+aulainfo  3165  0.0  0.5 380720 23060 ?        Sl   08:31   0:01 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-wacom
+aulainfo  3173  0.0  0.1 188136  5540 ?        Sl   08:31   0:02 /usr/lib/dconf/dconf-service
+colord    3187  0.0  0.3 318068 13988 ?        Ssl  08:31   0:00 /usr/lib/colord/colord
+aulainfo  3200  0.0  0.3 1163252 12172 ?       S<l  08:31   0:02 /usr/bin/pulseaudio --start --log-target=syslog
+rtkit     3201  0.0  0.0 183504  2916 ?        SNsl 08:31   0:01 /usr/lib/rtkit/rtkit-daemon
+aulainfo  3209  0.0  0.3 501852 12976 ?        Sl   08:31   0:00 /usr/lib/x86_64-linux-gnu/cinnamon-settings-daemon/csd-printer
+aulainfo  3215  0.0  0.2 299708  8748 ?        Ssl  08:31   0:00 /usr/lib/gvfs/gvfs-udisks2-volume-monitor
+aulainfo  3227  0.0  0.1 268936  6104 ?        Ssl  08:31   0:00 /usr/lib/gvfs/gvfs-mtp-volume-monitor
+aulainfo  3235  0.0  0.1 371908  7728 ?        Ssl  08:31   0:00 /usr/lib/gvfs/gvfs-afc-volume-monitor
+aulainfo  3244  0.0  0.1 267196  6184 ?        Ssl  08:31   0:00 /usr/lib/gvfs/gvfs-goa-volume-monitor
+aulainfo  3250  0.0  0.7 769636 31876 ?        Sl   08:31   0:00 /usr/lib/gnome-online-accounts/goa-daemon
+aulainfo  3252  0.0  0.7 183872 29572 ?        S    08:31   0:00 /usr/bin/python3 /usr/bin/cinnamon-launcher
+aulainfo  3259  0.0  0.1 296640  7912 ?        Sl   08:31   0:00 /usr/lib/gnome-online-accounts/goa-identity-service
+aulainfo  3261  0.0  0.1 281724  6820 ?        Ssl  08:31   0:00 /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
+aulainfo  3268 37.0  5.5 3753072 223984 ?      Sl   08:31 180:21 cinnamon --replace
+aulainfo  3294  0.0  0.8 463652 32720 ?        Sl   08:31   0:02 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+aulainfo  3311  0.0  0.7 434228 31560 ?        Sl   08:31   0:01 blueberry-obex-agent
+aulainfo  3320  0.1  1.7 1225472 68848 ?       Sl   08:31   0:41 nemo-desktop
+aulainfo  3321  0.0  0.8 647360 36124 ?        Sl   08:31   0:01 nm-applet
+aulainfo  3322  0.0  0.7 409472 29992 ?        Sl   08:31   0:01 /usr/bin/python3 /usr/bin/cinnamon-killer-daemon
+aulainfo  3371  0.0  0.1  82724  6728 ?        Ss   08:31   0:00 /usr/lib/bluetooth/obexd
+aulainfo  3375  0.0  0.1  73168  5908 ?        S    08:31   0:00 /usr/lib/x86_64-linux-gnu/gconf/gconfd-2
+aulainfo  3383  0.0  0.1 361328  7492 ?        Sl   08:31   0:00 /usr/lib/gvfs/gvfsd-trash --spawner :1.26 /org/gtk/gvfs/exec_spaw/0
+aulainfo  3395  0.0  0.1 197724  6272 ?        Ssl  08:31   0:01 /usr/lib/gvfs/gvfsd-metadata
+aulainfo  3449  0.0  1.4 712544 58532 ?        Sl   08:31   0:10 cinnamon-screensaver
+aulainfo  3478  0.0  1.5 736444 61660 ?        Sl   08:31   0:02 mintUpdate
+aulainfo  3615  0.0  0.8 250244 32600 ?        Sl   08:31   0:01 /usr/bin/python3 /usr/share/system-config-printer/applet.py
+aulainfo  3690  0.0  0.1 289752  7588 ?        Sl   08:33   0:00 /usr/lib/gvfs/gvfsd-computer --spawner :1.26 /org/gtk/gvfs/exec_spaw/1
+aulainfo  3880  0.0  0.1 363736  7788 ?        Sl   08:37   0:00 /usr/lib/gvfs/gvfsd-network --spawner :1.26 /org/gtk/gvfs/exec_spaw/2
+aulainfo  3892  0.0  0.1 374380  7552 ?        Sl   08:37   0:00 /usr/lib/gvfs/gvfsd-dnssd --spawner :1.26 /org/gtk/gvfs/exec_spaw/4
+root      3931  0.0  0.0  45840  2260 ?        S    08:41   0:00 dbus-launch --autolaunch=82929df7ee394b73b81252fe3b4e5020 --binary-syntax --close-stderr
+root      3932  0.0  0.0  62172  3300 ?        Ss   08:41   0:00 /usr/bin/dbus-daemon --syslog-only --fork --print-pid 5 --print-address 7 --session
+root      4424  0.0  0.3 366892 14096 ?        Ssl  08:41   0:00 /usr/lib/packagekit/packagekitd
+root     13499  0.0  0.1  28076  6176 ?        S    14:56   0:00 /sbin/dhclient -d -q -sf /usr/lib/NetworkManager/nm-dhcp-helper -pf /run/dhclient-enp0s17.pid -lf /var/lib/NetworkManager/dhclient-bfdb33ce-7821-3924-b15c-bcab29d7beea-enp0s17.lease -cf /var/lib/NetworkManager/dhclient-enp0s17.conf enp0s17
+root     14188  0.0  0.2 100984  8656 ?        Ss   15:01   0:00 /usr/sbin/cupsd -l
+root     14189  0.0  0.2 303520 11024 ?        Ssl  15:01   0:00 /usr/sbin/cups-browsed
+root     14325  0.0  0.0      0     0 ?        I    15:17   0:00 [kworker/0:1]
+root     14498  0.0  0.0      0     0 ?        I    15:26   0:00 [kworker/1:2]
+root     15191  0.0  0.0      0     0 ?        I    15:40   0:01 [kworker/3:0]
+root     15192  0.0  0.0      0     0 ?        I    15:40   0:00 [kworker/1:0]
+root     15343  0.0  0.0      0     0 ?        I    15:45   0:00 [kworker/0:0]
+root     15370  0.0  0.2 461140 10284 ?        Sl   15:45   0:00 /usr/libexec/xdg-desktop-portal
+root     15375  0.0  0.1 488580  6200 ?        Sl   15:45   0:00 /usr/libexec/xdg-document-portal
+root     15379  0.0  0.1 264588  5012 ?        Sl   15:45   0:00 /usr/libexec/xdg-permission-store
+root     15391  0.0  0.5 540672 20300 ?        Sl   15:45   0:00 /usr/libexec/xdg-desktop-portal-gtk
+root     15395  0.0  0.1 285064  7120 ?        Sl   15:45   0:00 /usr/lib/gvfs/gvfsd
+root     15400  0.0  0.1 350576  5608 ?        Sl   15:45   0:00 /usr/lib/gvfs/gvfsd-fuse /home/aulainfo/.gvfs -f -o big_writes
+root     15418  0.0  0.1 188036  5344 ?        Sl   15:45   0:00 /usr/lib/dconf/dconf-service
+root     15646  0.0  0.0      0     0 ?        I    15:51   0:00 [kworker/2:2]
+root     15697  0.0  0.0      0     0 ?        I    16:02   0:00 [kworker/3:2]
+aulainfo 16162  0.6  1.7 1227836 69516 ?       Sl   16:10   0:10 nemo /home/aulainfo/Scrivania/PROGRAMMI
+root     16326  0.0  0.0      0     0 ?        I    16:13   0:00 [kworker/u8:3]
+root     16360  0.0  0.0      0     0 ?        I    16:21   0:00 [kworker/u8:0]
+aulainfo 16375 12.8  3.5 86590352 142956 ?     Sl   16:32   0:42 xreader /home/aulainfo/Scrivania/LAB SO/LABSO_3_2018_IntroShell.pdf
+aulainfo 16381  0.0  0.1 187764  4228 ?        Sl   16:32   0:00 /usr/lib/x86_64-linux-gnu/xreaderd
+aulainfo 16391  0.0  0.8 102752360 33500 ?     SLl  16:32   0:00 /usr/lib/x86_64-linux-gnu/webkit2gtk-4.0/WebKitNetworkProcess 5 18
+root     16489  0.0  0.0      0     0 ?        I    16:34   0:00 [kworker/u8:1]
+aulainfo 16548  1.0  0.9 589604 36380 ?        Ssl  16:36   0:00 /usr/lib/gnome-terminal/gnome-terminal-server
+aulainfo 16555  0.0  0.1  22680  5080 pts/0    Ss   16:36   0:00 bash
+root     16601  0.0  0.0      0     0 ?        I    16:36   0:00 [kworker/3:1]
+root     16602  0.0  0.0      0     0 ?        I    16:36   0:00 [kworker/0:2]
+aulainfo 16641  0.0  0.0  37372  3328 pts/0    R+   16:37   0:00 ps aux

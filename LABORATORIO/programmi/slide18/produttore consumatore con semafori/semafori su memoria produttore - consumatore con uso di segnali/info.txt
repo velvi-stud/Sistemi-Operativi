@@ -1,0 +1,16 @@
+• nitems è il numero totale di elementi da produrre per tutti i produttori e nproducers è il numero di thread produttori. Entrambi sono impostati da linea di comando
+• Ci sono due nuove variabili nella struttura share: nput, l’indice della prossima entrata del buffer in cui memorizzare (modulo NBUFF) e nputval, il prossimo valore da memorizzare nel buffer. Queste variabili servono per sincronizzare i thread produttori multipli
+
+• Gli argomenti da linea di comando specificano il numero di elementi da memorizzare nel buffer ed il numero di thread produttori da creare 
+• Inizializzati i semafori, sono creati tutti i thread produttori ed il thread consumatore 
+• Aspettiamo poi che tutti i thread terminino 
+
+• Il ciclo termina quando gli nitem valori sono stati posti nel buffer da tutti i thread
+• Osserviamo che i produttori multipli possono acquisire il semaforo nempty allo stesso tempo, ma solo un produttore può acquisire il semaforo mutex per proteggere le variabili nput e nputval
+
+• Verifica che ciascuna entrata del buffer sia corretta, mentre stampa un messaggio in caso contrario
+
+I SEMAFORI QUANDO SONO CON MEMORIA VANNO INIZIALIZZATI SENZA PUNTATORI 
+PER POI TUTTE LE OPERAZIONI SONO FATTE CON "&" ANCHE L'INIT
+
+

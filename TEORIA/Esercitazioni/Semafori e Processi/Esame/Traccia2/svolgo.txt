@@ -1,0 +1,61 @@
+
+#define N 10
+
+
+buffer[N]: array of int: all of 0
+arr[N]: array of bool: all of true
+rnd: int: -1
+pid: int: 0
+j:int:0
+
+sig[N]: array of signal: all of 0
+assign: signal: 1
+take: signal: 0
+
+
+process_coordinator(){
+    
+    for i=0 to N
+        wait(assign); // aspetto che un processo prenda il valore
+        rnd=1+rand()%N;
+        while(arr[rnd]){
+            rnd=1+rand()%N;
+        }
+        signal(take); //attivo i processi in contesa per il valore
+        
+    
+    for i=0 to N
+        signal(sig[i]);  // invio un messaggio ai processi che stanno attendendo il "verdetto"
+    
+    while(j<=N){ // mi alterno con l'ultimo processo
+        wait(mutex);
+        print(buffer[j]);
+        j++;
+        signal(mutex);
+    }
+    
+}
+
+
+process_active(){
+
+    wait(take); // aspetto che il coord. generi il numero
+    pid = getpid();
+    buffer[rnd]= pid;
+    int k= rnd;
+    signal(assign); // eseguita l'operazione do il via al coordinatore per generare altri numeri
+
+
+    wait(sign[K]); // aspetto il "verdetto"
+    if(pid != getpid()){ // se non sono l'ultimo processo finisco.  Ovviamente l'ultimo processo a modificare la variabile pid sarà appunto l'ultimo
+        exit();
+    }    
+    
+    while(j<=N){ // mi alterno la stampa con in coord.
+        wait(mutex);
+        print(buffer[j]);
+        j++;
+        signal(mutex);
+    }    
+
+}

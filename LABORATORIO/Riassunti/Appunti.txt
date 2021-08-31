@@ -1,0 +1,1148 @@
+PANORAMICA UNIX
+•UNIX è un sistema operativo multiutente e multitasking. Più utenti possono avere vari task/processi che sono eseguiti contemporaneamente.
+•UNIX è anche un ambiente di sviluppo software. È nato ed è stato progettato per questo scopo (ad esempio fornisce utilità di sistema, editor, compilatori, assemblatori, interpreti, . . . ).
+•UNIX è stato appositamente progettato per essere generale e indipendente dall’hardware (facilmente portabile essendo scritto nel linguaggio ad alto livello C).
+
+COS'HA UNIX?
+•Ha dimensioni relativamente ridotte, un progetto modulare e “pulito”
+•Indipendenza dall’hardware
+•Il codice del SO è scritto in C anziché in uno specifico linguaggio assembler
+•UNIX e le applicazioni UNIX possono essere “facilmente” portate da un sistema hardware ad un altro. Il porting usualmente consiste nel trasferire il codice sorgente e ricompilarlo
+•È un ambiente produttivo per lo sviluppo del software
+•Ricco insieme di tool disponibili
+•Linguaggio di comandi versatile
+•Serendipità
+Architettura di UNIX (Metodo di funzionamento)
+•Un SO può essere definito come un software (leggero, chiamato Kernel) che controlla le risorse hardware del computer e fornisce un ambiente nel quale eseguire i programmi
+•L’interfaccia al kernel è uno strato di software chiamato SystemCall (chiamate di sistema). Le chiamate di sistema coinvolgono attività che possono essere raggruppate in 4 categorie principali: 
+	- gestione dei file
+	- gestione degli errori 
+	- gestione dei processi
+	- comunicazione tra processi
+•Le librerie di funzioni comuni sono costruite in cima all’interfaccia delle chiamate di sistema (le applicazioni, volendo, possono usare entrambe). Le funzioni di libreria forniscono servizi di utilità generale al programmatore, non sono entry point del kernel, anche se possono fare uso di SystemCall per realizzare il proprio servizio
+•La shell è un’applicazione speciale che fornisce l’interfaccia con il kernel e che consente l’esecuzione di altre applicazioni.
+
+
+LINGUAGGIO C
+E' un linguaggio di programmazione che:
+•E' molto vicino all’hardware
+•Molti costrutti si traducono facilmente nel codice macchina
+•I tipi di dati disponibili riflettono ciò che supporta direttamente l’hardware
+•L’accesso alla memoria indiretto (via i puntatori) consente ai programmatori di accedere a tutte le parti del sistema
+•Storicamente UNIX, il kernel di Linux, molti software, I driver delle periferiche sono quasi tutti scritti in C
+•Il C è veloce (conseguenza del suo più basso livello di astrazione rispetto ad altri linguaggi).
+•Una volta scritto un programma questo deve essere trasformato in un eseguibile e la costruzione di un programma consiste in una serie di passi. Ad ogni passo, il codice è trasformato in una forma intermedia: Preprocessed, codice assembly, codice oggetto e librerie. E’ importante comprendere ciascun passo per diversi motivi perché ognuno offre più strategie per risparmiare tempo di programmazione e per massimizzare le risorse del sistema:
+	- il passo di preprocessing fornisce le macro per la sostituzione ripetitiva di stringhe
+	- Il passo assembly o compilazione fornisce il programmatore dei nomi per le locazioni di memoria praticamente lo converte in linguaggio Assembly
+	- Il passo di linking fornisce un modo per il riuso di codice eseguibile esistente in programmi multipli.
+
+•Un programma C è composto dai seguenti pezzi:
+	•Segmento di testo: le istruzioni macchina eseguite dalla CPU
+		- Condivisibile (una sola copia in memoria)
+		- A sola lettura (protezione)
+	•Segmento di dati inizializzati: contiene variabili globali e statiche inizializzate nel programma.
+	•Segmento di dati non inizializzati (bss, “block started by symbol”): le variabili globali e statiche sono inizializzati dal kernel a 0 o al puntatore nullo prima dell’esecuzione.
+	•Stack: contiene le variabili automatiche con le informazioni salvate ogniqualvolta è chiamata una funzione
+		- Indirizzo di ritorno, registri
+		- La funzione chiamata alloca spazio per le sue variabili automatiche e temporanee.
+	•Heap: luogo in cui avviene l’allocazione dinamica della memoria (tra il segmento dati non inizializzato e lo stack)
+
+
+Come eseguire un file .c con unix?
+•Utilizzando la shell di linux come nel seguente esempio:
+$ gcc - c reverse.c
+$ gcc - c palindroma.c
+$ gcc - c usaPal.c
+$ gcc reverse.o palindroma.o usaPal.o - o stampaPalindroma
+$ ./stampaPalindroma anna
+•Rinominando un documento come Makefile e scriverci all'interno come nell'esempio:
+#Commento Makefile, per farlo nella shell, nella directory usare comando Makefile
+stampaPalindroma : usaPal.o palindroma.o reverse.o
+	gcc usaPal.o palindroma.o reverse.o - o usaPal
+usaPal.o : usaPal.c palindroma.h
+	gcc - c usaPal.c
+palindroma.o : palindroma.c palindroma.h reverse.h
+	gcc - c palindroma.c
+reverse.o : reverse.c reverse.h
+	gcc - c reverse.c
+
+
+SHELL
+•La shell è un programma speciale usato come interfaccia tra l’utente ed il kernel del sistema operativo UNIX/Linux tramite dei comandi digitati.
+•La shell GNU Bourne Again o Bash, è la shell di default di Linux è molto efficiente per operazioni: Sia a livello di programmazione che di uso interattivo. Inoltre, all’utente è consentito di adattare il proprio ambiente di lavoro
+•E’ una delle più popolari shell usate dagli utenti UNIX e Linux ed è conforme allo standard POSIX (Il prompt di default è il $).
+•Le Directory sono organizzato nel seguente modo:
+	- /dev			contiene i driver dei dispositivi
+	- /bin e /usr/bin	contiene i comandi Linux standard
+	- /lib e /usr/lib	contiene le librerie standard di Linux
+	- /var			contiene i file di configurazione ed i LOG file
+	- /etc			contiene i file di configurazione di default
+	- /usr/local/bin	contiene comandi che non fanno parte della distribuzione ma sono stati introdotti successivamente
+	- /opt			contiene software commerciale
+	- /tmp			memorizza file temporanei
+	- /sbin e /usr/sbin	contiene i comandi di sistema dell’amministratore (/sbin sta per “safe” bin)
+
+COMANDI SHELL
+•help: manuale che spiega la sintassi del comando
+	$ ls - - help
+		#E' la guida che spiega la sintassi del comando ls
+	$ ls - - help | less 
+		#consente di visualizzare la guida del comando ls su più pagine video (vedi comando less) 
+•man [comando]: consente di consultare il manuale in linea
+•cd: consente di cambiare la directory corrente in quella indicata in <directory> (change directory)
+	$ cd Desktop
+		#se la directory corrente è home porta nella directory Desktop
+	$ cd .. 
+		#porta della directory superiore (o padre)
+	$ cd /var 
+		#in qualunque directory ci si trovi porta nella directory /var
+	$ cd ~ oppure cd
+		#porta della directory home dell'utente (/home/[nome utente])
+	$ cd - 
+		#porta della directory precedente 
+•pwd: mostra la directory corrente
+•ls: lista il contenuto di una directory (cartella). 
+	I Parametri:
+		- a lista anche i file nascosti
+		- l mostra tutte le informazioni per ogni file (formato lungo)
+		- k dimensione dei file è in Kb (normalmente è in byte).
+		- F classifica i file a seconda del tipo.
+		- R elenco ricorsivo
+		- lah formato lungo
+	$ ls - l 
+		#contenuto della directory corrente in formato lungo
+	$ ls - a
+		#contenuto della directory iniziale (root) compresi i file nascosti
+	$ ls - lah
+		#contenuto della directory corrente in formato lungo
+	$ ls - R
+		#elenco ricorsivo
+•touch [nomefile]: si posiziona all'interno del file e permette anche di scrivere, se non esiste lo crea
+•cp: copia file e director (Il parametro - r copia le directory e le sottodirectory ricorsivamente)
+	$ cp file1 cart1
+		#copia file1 dentro la directory cart1
+	$ cp - r cart1 cart2 
+		#copia tutta la directory cart1 dentro a cart2
+	$ sudo cp - a cart1 cart2 
+		#copia tutta la directory cart1 dentro a cart2 mantenendo gli stessi permessi e le informazioni su data e ora di creazione
+	$ cp - rv cart1 cart2 
+		#copia tutta la directory cart1 dentro a cart2 visualizzando l'operazione (verbose)
+•mv: muove o rinomina un file o una directory (Il parametro - i chiede la conferma)
+	$ mv vecchio nuovo 
+		#rinomina il file vecchio in nuovo
+	$ mv file1 cart1 
+		#sposta il file file1 dentro la directory cart1
+•rm: rimuove un file o una directory (Il parametro - rf cancella ricorsivamente sia le cartelle che il loro contenuto)
+	$ rm file1 file2
+		#cancella file1 e file2
+	$ rm *.* 
+		#cancella TUTTO il contenuto della directory corrente. Le eventuali directory presenti non saranno rimosse. Da usare con cautela !
+	$ rm - rf cart1 
+		#cancella tutto il contenuto della directory cart1
+•rmdir: rimuove una directory vuota, con questo comando è possibile cancellare una o più directory vuote (remove directory)
+	$ rmdir prova 
+		#cancella la directory vuota prova
+•mkdir: crea una directory
+	$ mkdir prova 
+		#crea la directory prova
+•pwd: mostra la directory corrente, con questo comando è possibile sapere in quale directory ci troviamo (print working directory)
+	$ pwd 
+		#Se l'utente ECOmmunication si trova nella cartella principale visualizza /home/ecommunication
+•chmod: con questo comando è possibile modificare i permessi di un file. (Il parametro - R consente di modificare ricorsivamente i permessi delle directory indicate e del loro contenuto)
+	$ chmod 0755 file1 
+		#imposta lettura, scrittura ed esecuzione per il proprietario, e lettura ed esecuzione per gruppo ed altri per file1
+	$ sudo chmod - R 0755 dir1 
+		#imposta lettura, scrittura ed esecuzione per il proprietario, e lettura ed esecuzione per gruppo ed altri per la directory di1 e per i file contenuti
+	$ chmod u+rwx file1
+		#imposta lettura, scrittura ed esecuzione per il proprietario lasciando inalterati gli altri permessi
+	$ chmod ugo+rwx file1
+		#imposta lettura, scrittura esecuzione per tutti (u user, g group, o other)
+	$ chmod ugo- x file1
+		#rimuove il permesso di esecuzione a tutti
+•chown: modificare il proprietario di un file, con questo comando è possibile modificare il proprietario di un file. (Il parametro - R consente di modificare ricorsivamente i permessi delle directory indicate e del loro contenuto).
+	$ chown nome1 file1 
+		#rende il file1 proprietario di nome1
+	$ chown nome1:gruppo1 file1 
+		#rende il file1 proprietario di nome1 e del gruppo1
+	$ chown - R nome1:gruppo1 dir1 
+		#rende la directory dir1 e i file contenuti proprietari di nome1 e del gruppo1
+	$ sudo chown - R root:root drupal
+		#rende la directory drupal e i file contenuti proprietari di root e del root
+•cat: visualizza il contenuto di uno o più file
+	$ cat file1 
+		#visualizza il contenuto del file1
+	$ cat file1 file2 > file3 
+		#crea file3 con il contenuto di file1 e file2
+	$ cat file1 file2 >> file3 
+		#aggiunge il contenuto di file1 e file2 al file3
+	$ cat file1 - n
+		#visualizza il contenuto del file1 numerandolo
+	$ tac file1 
+		#visualizza il contenuto del file1 in ordine inverso
+•tar: crea/decomprime archivi compressi. Comprimere file1 file2 in archivio.tar.gz:
+	$ tar - cvzf archivio.tar.gz file1 file2 
+		#variabili c= crea, v=verbose, z=comprimi, f=nome archivio (ES archivio.tar.gz)
+	$ tar - xvf archivio.tar.gz
+		#x=estrai, v=verbose, f=nome archivio (ES archivio.tar.gz)
+•who: stampa il nome di tutti gli utenti attualmente connessi al sistema. Oltre al nome degli utenti ci indica su che terminale sono connessi e quando si sono collegati. 
+•whoami: stampa il nome con il quale ci siamo connessi al sistema.
+•ps: consente di visualizzare lo stato dei programmi presenti nel sistema. Lanciato senza parametri, visualizza i dati dei programmi associati con l'utente che l'ha lanciato. (Il paramentro - a visualizza tutti i processi del sistema, anche quelli associati ad altri terminali o non associati a nessun terminale (i cosiddetti daemon)).
+	$ ps - a 
+		#stampa a video tutti i processi, si può implementare la pipe e la grid per cercare tra i processi
+•pipe o "|" : il metodo secondo il cuale è possibile eseguire varie azioni senza esplicare su più linee nella shell
+	$ ps - ef |grep http | wc - l
+		#Con questo comando si chiede l’elenco di tutti i processi, quindi filtrare con quello che contiene la stringa “http” e finalmente si chiede il numero di linee. Così, in breve si conta il numero di processi http in esecuzione.
+•Kill: mandare un segnale ad un processo identificato con il PID (process id). 
+	$ kill –l
+		#elenca tutta la scelta dei possibili segnali in una tabella
+	$ kill –s stop PID_number
+		#invia un segnale di stop al processo identificato con quel numero
+	$ kill –s cont PID_number
+		#riprende il processo fermato (digitarlo da altra shell)
+•ln - s: crea il soft- link, un collegamento indipendete
+	$ ln - s /etc/hosts ./hosts
+		#crea un soft link del file /etc/hosts nella directory corrente. Oppure
+	$ ln - s /etc ./lamiaetc
+		#crea un soflink chiamato lamiaetc che punta a /etc nella directory corrente.
+•ls: crea l’hard- link, un collegamento stile puntatore
+	$ ln /var/www/pippo.html /var/www/topolino.html
+		#fa un hard_link del file pippo nella stessa cartella ma rinominato con topolino
+
+
+FILE I/O
+•Il SO fornisce i servizi di base come: Aprire un file, leggere un file, allocare memoria
+•Servizi forniti tramite delle routine del kernel (La libreria offre delle funzioni omonime che ci permettono di chiamare le SystemCall come se fossero delle funzioni C Semplificando: SystemCall= funzione C)
+•Le librerie per la gestione dei fila I/O sono:
+	- printf: chiama la SystemCall write per stampare i messaggi su video (file standard output)
+	- malloc: sbrk è la SystemCall che alloca un certo numero di byte
+	- strcpy: non chiama nessuna SystemCall
+
+•// int open(const char *path, int oflag, /*mode_t mode*/...); è la function (<unistd.h>) che permette l'elaborazione del file specificato dalla variabile path.
+Il risultato intero è dato dalla posizione che il file aperto nel registro dei dispositivi I/O del sistema. Per convenzione DA RICORDARE che:
+		- il descrittore 0 viene associato allo standard input
+		- Il descrittore 1 allo standard output
+		- Il descrittore 2 allo standard error
+		- quindi (eccetto modifiche di sistema come il cambio delle variabili standard) il risultato sarà >2 se è stato aperto con successo, altrimenti - 1 se non è riuscita l'apertura QUESTO VALORE E' QUELLO CHE ANDREMO A PASSARE IN OGNI CAMPO FIELDS.
+La variabile oflag (<fcntl.h>) è settata come, si possono richiamare più di uno utilizzando la pipe "|":
+		- O_RDONLY apri solo in lettura
+		- O_WRONLY apri solo in scrittura
+		- O_RDWR apri in lettura e scrittura
+		- O_APPEND esegue un’aggiunta alla fine del file per ciascuna scrittura
+		- O_CREAT crea il file se non esiste
+		- O_EXCL non utilizzare insieme a O_CREAT
+		- O_TRUNC se il file esiste, ed è aperto con successo per sola scrittura o per lettura-scrittura, lo tronca a lunghezza zero
+		- O_NOCTTY se path è un terminal device, non lo rende il terminale di controllo del processo
+		- O_NONBLOCK se path è una FIFO, un file a blocchi o a caratteri, apre in maniera non bloccante, sia in lettura sia in scrittura
+La variabile mode definisce i bit di permesso di accesso ai file, in particolare:
+		- S_IRUSR Lettura utente
+		- S_IWUSR Scrittura utente
+		- S_IXUSR Esecuzione utente
+		- S_IRGRP Lettura gruppo
+		- S_IWGRP Scrittura gruppo
+		- S_IXGRP Esecuzione gruppo
+		- S_IROTH Lettura altri
+		- S_IWOTH Scrittura altri
+		- S_IXOTH Esecuzione altri
+
+•// int close(int fildes); è la SystemCall (<unistd.h>) che permette di chiudere il file. Ritorna - 1 se l'operazione non è andata a buon fine
+
+•// off_t lseek (int fildes, off_t offset, int whence); è la SystemCall (<unistd.h>) della lseek, è associato un valore intero non negativo, detto offset corrente del file, che misura il numero di byte dall'inizio del file da cui si vuole iniziare ad operare, altrimenti -1 se occorre un errore.
+Il campo whence è definito dalle seguenti variabili:
+	- SEEK_SET: l'offset viene posto a offset byte dall'inizio del file
+	- SEEK_CUR: viene aggiunto offset all'offset corrente
+	- SEEK_END: l'offset viene posto alla fine del file, più offset
+
+•// ssize_t read(int fildes, void *buf, size_t nbytes); è la SystemCall (<unistd.h>) che permette la lettura su file, memorizza gli nbytes dal seek e li salva nella varibile buf. L'output è il numero dei caratteri effettivamente letti (al più nbytes), altrimenti - 1 se l'operazione ha dato errore. Terminata la lettura aggiorna il seek all'ultimo+1 carattere letto.
+
+•// ssize_t write(int fildes, const void *buf, size_t nbytes); è la SystemCall (<unistd.h>) che permette la scrittura su file dalla variabile buf (di almeno nbytes/8 caratteri) gli nbytes dal seek. L'output è il numero dei caratteri effettivamente scritti (al più nbytes), altrimenti - 1 se l'operazione ha dato errore. Terminata la lettura aggiorna il seek all'ultimo+1 carattere letto.
+	•Il "BestSize" degli nbytes nella lettura è di 4096 o 8192 bytes
+
+•Per gestire gli errori originati dalle SystemCall, i due principali ingredienti da utilizzare sono:
+	- errno variabile globale che contiene il codice numerico dell'ultimo errore generato da una SystemCall
+	- perror() subroutine che mostra una descrizione “testuale” dell'ultimo errore generato dall'invocazione di una SystemCall
+
+
+FILES E DIRECTORY
+•La maggior parte dei file in Unix sono di due tipi: regolari e directory. Esistono anche tipi di file aggiuntivi, I tipi di file sono:
+	- Regolari: 			il tipo più comune di file contenente dati in una qualche forma, per il kernel non c’è distinzione tra dati testo o binari
+	- Directory:			contiene nomi di altri file e puntatori alle informazioni su tali file
+	- File speciali a blocco: 	sono usati per rappresentare dispositivi che consistono in un insieme di blocchi a indirizzamento casuale (dischi)
+	- File speciali a caratteri: 	sono usati per rappresentare dispositivi che costituiscono flussi di caratteri (terminali, stampanti e interfacce di rete)
+	- FIFO: 			usato per la comunicazione tra processi
+	- Socket: 			tipo di file usato per la comunicazione su rete tra processi
+	- Link simbolici: 		Soft Link
+	- Link forti:			Hard Link
+
+•// int stat (const char *path, struct stat *buf); è la SystemCall (<sys/stat.h>) che permette, dato (avendo i permessi per accedere) un percorso file: ritornano informazioni sul file. Si può trovare il file stat secondo altre due funcion:
+	-// int fstat (int filedes, struct stat *buf); informazioni sul file aperto sul descrittore I/O
+	-// int lstat (const char *path, struct stat *buf); informazioni sul link simbolico, non sul file puntato da esso.
+La variabile restituita ricorre alla variabile struct stat formata: 
+	-// struct stat 
+		{
+		dev_t	st_dev;			/* device */
+		ino_t	st_ino;			/* inode */
+		mode_t	st_mode;		/* file type & protection */ 
+		nlink_t	st_nlink;		/* number of hard links */ 
+		uid_t	st_uid;			/* user ID of owner */
+		gid_t	st_gid;			/* group ID of owner */
+		dev_t	st_rdev;		/* device type (if inode device) */ 
+		off_t	st_size;		/* total size, in bytes */
+		unsigned long st_blksize; 	/* blocksize for filesystem I/O */ 
+		unsigned long st_blocks; 	/* number of blocks allocated */ 
+		time_t	st_atime;		/* time of last access */
+		time_t	st_mtime;		/* time of last modification */ 
+		time_t	st_ctime;		/* time of last change */
+		}; 
+Per determinare il tipo di file si utilizzano le seguenti macro: con input il campo della struct stat buffer mode_t st_mode:
+	- S_ISLNK(st_mode)	symbolic link
+	- S_ISREG(st_mode)	regular file
+	- S_ISDIR(st_mode)	directory
+	- S_ISCHR(st_mode) 	character device
+	- S_ISBLK(st_mode) 	block device
+	- S_ISFIFO(st_mode) 	FIFO
+	- S_ISSOCK(st_mode) 	socket
+Il campo st_size di stat contiene la dimensione in byte del file. Ha senso solo per file regolari, directory e link simbolici.
+Se presenti, st_blksize e st_blocks si riferiscono, rispettivamente, al migliore fattore di blocco per eseguire operazioni di I/O sul file e al numero di blocchi da 512 byte allocati per il file (è praticamente un consiglio).
+	
+•A ciascun processo vengono associati i seguenti identificativi:
+	- real user ID e real group ID, identificano l'utente
+	- effective user ID, effective group ID e supplementary group ID determinano i permessi di accesso ai file.
+A seconda dalla chiamata al file posso avere o no determinati permessi lettura/scritture/esecuzione, quindi anche l'accesso allo stesso.
+
+•// int access (const char *pathname, int mode); è la SystemCall (<unistd.h>) che permette di effettuare il test di accessibilità di un file sulla base del real user ID e del real group ID. Essa restituisce 0 se Ok, altrimenti -1.
+    // int mode, può essere:
+    - int R_OK: Flag meaning test for READ permission. 
+    - int W_OK: Flag meaning test for WRITE permission. 
+    - int X_OK: Flag meaning test for EXECUTION permission. 
+    - int F_OK: Flag meaning test for EXISTENCE of the file. 
+
+•// mode_t umask(mode_t mask); è la SystemCall (<sys/stat.h>) che viene utilizzata per assegnare ad un processo la modalità di creazione di un file. QUINDI una volta instanziato l'unmask all'interno del programma, tutto il programma creerà i file con i permessi di accesso dati dall'unmask stessa. La funzione ritorna il valore precedente della maschera di creazione dei file 
+L’argomento mode_t mask è formato da un OR bit a bit delle nove costanti di permesso di accesso ai file (quindi si possono selezionare più di una separata dalla pipe "|"), in particolare:
+		- S_IRUSR	0400	owner read
+		- S_IWUSR	0200	owner write
+		- S_IXUSR	0100	owner execute
+		- S_IRGRP	0040	group read
+		- S_IWGRP	0020	group write
+		- S_IXGRP	0010	group execute
+		- S_IROTH	0004	others read
+		- S_IWOTH	0002	others write
+		- S_IXOTH	0001	others execute
+		
+•//int chmod (const char *path, mode_t mode); è la SystemCall (<sys/stat.h>) che perme di cambiare i permessi di accesso ad un file. Per cambiare i bit di permesso di un file, l’effective user ID del processo deve essere uguale all’ ID del proprietario, oppure il processo deve avere i diritti del superutente. Restituiscono 0 se OK, - 1 in caso di errore. Essa si può presentare anche come:
+	- int fchmod (int fildes, mode_t mode); che in input è il valore del file aperto nel registro I/O
+	
+•//int chown (const char *path, uid_t owner, gid_t group); è la SystemCall (<unistd.h>) che permette di cambiare lo user ID ed il group ID di un file. (Solo un processo superutente può modificarne il                                                                                                                  proprietario. Un processo non superutente, proprietario del file può solo modificarne il gruppo con uno tra quelli supplementari a cui appartiene). Ritornano 0, se OK, - 1 in caso di errore. Tali funzioni possono trovarsi anche come:
+	-// int fchown (int fd, uid_t owner, gid_t group); che in input è il valore del file aperto nel registro I/O
+	-// int lchown (const char *path, uid_t owner, gid_t group);che in input è il path del link.
+	
+•//int truncate (const char *path, off_t length); è la SystemCall (<unistd.h>) che tronca un file esistente a off_t length byte. Se il file ha una dimensione maggiore di length, i dati oltre length non sono più accessibili. Se il file ha meno di length byte, il comportamento della funzione dipende dall'implementazione. Ritornano 0 se OK, - 1 in caso di errore. Si può trovare anche:
+	-// int ftruncate (int fd, off_t length); che in input è il valore del file aperto nel registro I/O.
+	
+•// int link (const char *oldpath, const char *newpath); è la SystemCall (<unistd.h>) che fa puntare più directory all'i-node di un file, praticamente esegue un hard-link. Se newpath già esiste è ritornato un errore. Ritorna 0 se OK, -1 in caso di errore (Il più delle implementazioni richiedono che oldpath e newpath risiedano nello stesso filesystem).	
+
+•// int symlink (const char *oldpath, const char *newpath); è la SystemCall (<unistd.h>) che permette di crere un link simbolico soft-link. Restituisce 0 se OK, - 1 in caso di errore.
+
+•// int readlink (const char *path, char *buf, size_t bufsiz); è la SystemCall (<unistd.h>) che permette di legge i link. Il contenuto del link è posto in buf, senza carattere di terminazione. Restituisce il numero di byte letti se OK, -1 in caso di errore.
+
+•// int unlink (const char *pathname); è la SystemCall (<unistd.h>) e la si usa per rimuovere un elemento dalla tabella della directory dell'i-node a essa associata. La funzione decrementa il numero di link (nella variabile tipo nlink_t st_nlink nella struct stat) del file puntato da pathname. Il file risulta ancora accessibile, se il numero di link è non nullo. Ritorna 0 se OK, -1 in caso di errore. ATTENZIONE quando il file viene chiuso, il kernel conta il numero di processi che hanno aperto il file: se questo è zero ed il numero di link del file è zero, allora il file è cancellato.
+
+RIGUARDANDO LE DIRECROTY
+•// int mkdir (const char *pathname, mode_t mode); è la SystemCall (<sys/stat.h>) che permette la creazione di una cartella. Ritorna 0 se OK, - 1 in caso di errore;
+
+•// int rmdir (const char *pathname); è la SystemCall (<unistd.h>) che permette l'eliminazione di una cartella. Ritorna 0 se OK, - 1 in caso di errore;
+
+•// DIR *opendir(const char *name); è la SystemCall (<dirent.h>) che permette di aprire una directory (da chiunque abbia i permessi di accesso). Ritorna un puntatore se OK, NULL in caso di errore.
+
+•// struct dirent *readdir(DIR *dir); è la SystemCall (<dirent.h>) che permette di leggere la directory specificata in input, da qualunque processo abbia le autorizzazioni per farlo. Ritorna un puntatore se OK, NULL alla fine o in caso di errore. Il valore ritornato è di tipo:
+	-// struct dirent	
+		{ 
+		ino_t d_ino;
+		char d_name[NAME_MAX + 1];
+		}; è la variabile/struttura data in output dalla function readdir.
+	
+•// void rewinddir(DIR *dir); è la SystemCall (<dirent.h>) che permette di riavvolgere la directory in lettura.
+
+•// int closedir(DIR *dir); è la SystemCall (<dirent.h>) che chiude la directory aperta. Restituisce Il puntatore ad una struttura di tipo DIR ritornato da opendir è utilizzato dalle altre funzioni.
+
+•// int chdir (const char *path); è la SystemCall (<unistd.h>) che cambia la directory di lavoro del processo. Ritorna 0 se OK, -1 in caso di errore 
+
+•// char *getcwd (char *buf, size_t size); è la SystemCall (<unistd.h>) che ritorna il path della directory di lavoro corrente. Ritorna puntatore a buf se OK, NULL in caso di errore.
+
+
+PROCESSI
+•Un processo è un programma in esecuzione e un programma è costituito da istruzioni e dati ed è memorizzato in un file. Un processo consiste nell’insieme di eventi che scaturiscono durante l’esecuzione di un programma. E’ un’entità dinamica a cui è associato un insieme di informazioni necessarie per la corretta esecuzione e gestione del processo (memorizzate nella Process Structure, nel caso il processo è nella RAM anche l'User-structure, entrambe risiedono nel PCB) da parte del sistema operativo. Il processo Unix mantiene spazi di indirizzamento separati per i dati e per il codice del processo. Ogni processo ha uno spazio di indirizzamento dei dati privato (per le variabili del processo) e uno spazio di indirizzamento del codice condiviso. Vengono salvati nella Text Table i vari text structure che contengono il puntatore al segmento di codice e i vari processi a cui fanno rifermento. La Text Table risede nell'area di memoria della Process Table (che memorizza anche altri parametri) ove sono memorizzati tutti i processi attivi.
+
+AVVIO DI UN PROCESSO (in c): 
+•Si ha con l'invocazione da una shell o da un altro programma in esecuzione. Quando si esegue un programma si esegue prima una routine di start-up speciale, specificata come indirizzo di partenza del programma eseguibile (impostato dal linker), che prende:
+	- valori passati dal kernel in argv[]dalla linea di comando
+	- variabili d’ambiente
+e poi segue successivamente è la funzione main (in c).
+
+•// int main (int argc, char *argv[], char *envp[]); argc è il numero di argomenti, argv è un array di puntatori agli argomenti e anvp che sono i puntatori alle variabili di ambiente da utilizzare. 
+
+
+TERMINAZIONE E COMUNICAZIONE DI TERMINE DI UN PROCESSO (in c):
+•La terminazione di un processo consiste in una serie di operazioni che lasciano il sistema in stato coerente:
+	- chiusura dei file aperti
+	- rimozione dell’immagine dalla memoria
+	- eventuale segnalazione al processo padre
+•Per gestire quest’ultimo aspetto Unix impiega le SystemCall exit e wait (o waitpid) in modo coordinato:
+	- terminazione dell’esecuzione di un processo (exit)
+	- attesa della terminazione di un processo da parte del processo che lo ha creato (wait).
+•Esistono diversi tipi di terminazioni di processo:
+	- Terminazione normale
+	- Ritorno dal main
+	- Chiamata di exit
+	- Chiamata di _exit o _Exit
+	- Ritorno dell’ultimo thread dalla sua routine di avvio
+	- Chiamata di pthread_exit dall’ultimo thread
+	- Terminazione  anomala
+	- Chiamata di abort
+	- Ricezione di un segnale
+	- Risposta dell’ultimo thread ad una richiesta di cancellazione
+	Ricordiamo che le funzioni di uscita sono chiamate senza alcun codice di uscita.
+	
+•Sono tre le funzioni che terminano (date come l'argomento) un programma normalmente:
+	- // void _exit(int status); situata in (<unistd.h> ) è la SystemCall che ritorna al kernel immediatamente;
+	- // void _Exit(int status); situata in (<stdlib.h>) che ritornano al kernel immediatamente;
+	- // void exit (int status); situata in (<stdlib.h>) che prima esegue una procedura di “pulizia” e poi ritorna al kernel;
+
+•// int atexit (void(*func)(void)); situata in (<stdlib.h>)  (libreria standard) registra almeno 32 funzioni chiamate automaticamente quando è invocata exit. Resistuisce 0 se OK, < o > 0 in caso di errore. Si passa l’indirizzo di una funzione come argomento (non riceve alcun argomento e non restituisce nulla). (Quando si invoca la exit questa chiama le funzioni nell’ordine inverso rispetto a quello in cui sono state registrate).
+
+•//pid_t wait(int *statloc); situata in (<sys/types.h> e <sys/wait.h>). sospende il processo invocante finché: un figlio ha terminato la propria esecuzione, oppure riceve un segnale. Ritorna un errore (- 1) se il processo non ha figli, altrimenti è restituito il pid del processo figlio terminato. Se il processo invocante ha più di un figlio, wait ritorna quando uno qualsiasi di essi ha terminato. 
+	•L'argomento int *statloc é un puntatore ad un intero che serve per memorizzare lo stato di uscita ed altri per indicare il segnale che ha causato la terminazione ove:
+			- se il byte meno significativo di statloc è 0, il byte più significativo rappresenta lo stato di terminazione. 
+			- in caso contrario, il byte meno significativo di statloc descrive il segnale che ha terminato il figlio (terminazione involontaria).
+
+•// pid_t waitpid(pid_t pid, int *statloc, int options); situata in (<sys/types.h> e <sys/wait.h>). sospende il processo invocante finché: il processo pid ha terminato la propria esecuzione, oppure riceve un segnale. Ritorna un errore (-1) se il processo non ha figli, altrimenti è restituito il pid del processo figlio terminato.
+	•L'argomento pid_t pid di waitpid ha la seguente interpretazione:
+		- pid = -1	attende un qualsiasi figlio (uguale a wait)
+		- pid > 0	attende il processo che ha il process ID uguale a pid
+		- pid = 0	attende un qualsiasi figlio il cui process group ID è uguale a quello del processo chiamante
+		- pid < -1	attende un qualsiasi figlio il cui process group ID è uguale a quello del valore assoluto di pid
+	•L'argomento int options può essere:
+		- 0: nullo
+		- WNOHUNG: non bloccherà il processo invocante se il pid del figlio non è immediatamente disponibile (ritorna 0)
+		- WUNTRACED: ritorna lo stato di un figlio sospeso
+•L'argomento statloc può essere VERIRIFICATO una volta invocata la waitpid tramite:
+    ATTENZIONE LO STATO DI RITORNO, SIA DELLE EXIT CHE DEL RETURN DEVE ESSERE UN NUMERO <=256 (POI SI RITORNERA A 0)
+	- WIFEXITED(stat):      vero se il figlio è terminato normalmente 
+	- WEXITSTATUS(stat):    ritorna lo stato
+	- WIFSIGNALED(stat):    vero se il figlio è uscito a causa di un segnale
+	- WTERMSIG(stat):       ritorna il segnale
+	- WIFSTOPPED(stat):     vero se il figlio è fermato
+	- WSTOPSIG(stat):       ritorna il segnale
+•Il kernel notifica al genitore la terminazione di un processo figlio mediante il segnale SIGCHLD
+
+
+STATO E CARATTERISTICHE DEI PROCESSI
+•Le caratteristiche di un processo può essere visto come:
+	•Processo pesante con codice rientrante
+		- Dati non condivisi
+		- Codice condivisibile con altri processi
+	•Processo con funzionamento in doppia modalità
+		- Processi utente (modalità utente)
+		- Processi di sistema (modalità kernel)
+•Lo stato in cui il processo può trovarsi sono:
+	- Init: caricamento in memoria del processo e inizializzazione delle strutture del SO
+	- Ready: processo pronto
+	- Running: il processo usa la CPU
+	- Sleeping: il processo è sospeso in attesa di un evento
+	- Terminated: deallocazione del processo dalla memoria
+	Inoltre
+	- Zombie: il processo è terminato ma è in attesa che il padre ne rilevi lo stato di terminazione
+	- Swapped: il processo (o parte di esso) è temporaneamente trasferito in memoria secondaria
+	•Lo scheduler a medio termine (swapper) gestisce i trasferimenti dei processi
+		- Da memoria centrale a secondaria (swap out). Si applica, preferibilmente, ai processi bloccati (sleeping) prendendo in considerazione tempo di attesa, di permanenza in memoria e dimensione del processo (preferibilmente i processi più lunghi)
+		- Da memoria secondaria a centrale (swap in).Si applica preferibilmente ai processi più corti.
+•Elementi della Process Structure:
+	- PID
+	- Stato del processo
+	- Riferimento ad aree dati e stack
+	- Riferimento indiretto al codice
+	- PID del processo padre
+	- Priorità del processo
+	- Riferimento al prossimo processo in coda
+	- Puntatore alla User structure
+	- ...
+•Elementi della User structure:
+	- Una copia dei registri di CPU
+	- Informazioni sulle risorse allocate (file aperti)
+	- Informazioni sulla gestione di eventi asincroni (segnali)
+	- Directory corrente
+	- Proprietario
+	- Gruppo
+	- Argc/argv, PATH, ENVIROMENT
+	- ...
+•la Process structure e la User structure sono immagine di un processo. Non tutta l'immagine è accessibile in modo user, poichè servirebbe i permessi Kernel. anche perchè la parte residente come la Process Table e la Tect table sono una sorta di registri non swappabili di proprietà del S.O. e quello che potremmo vedere sono:
+	- Process structure (kernel, residente): è l’elemento della process table associato al processo
+	- Text structure (kernel, residente): elemento della text table associato al codice del processo
+	- Area dati globali utente (user, swappable): Segmento dati inizializzati e  non inizializzati
+	- Stack, heap utente (user, swappable): aree dinamiche associate al programma eseguito
+	- Stack del kernel(kernel, swappable): stack di sistema associato al processo per le chiamate a SystemCall
+	- U- area(kernel, swappable): struttura dati contenente i dati necessari al kernel per la gestione del processo quando è residente
+	
+•// pid_t fork (void); residente in (<unistd.h>). Crea una copia del processo che esegue la fork: L’area dati viene duplicata, PID e PPID nei processi padre e figlio sono differenti, l’area codice viene condivisa: 
+	- Il processo creato (figlio) riceve esito = 0
+	- Il processo creante (padre) riceve esito > 0 che corrisponde all’identificatore (PID) di processo del processo creato
+Se l’operazione fallisce genera esito = - 1.
+
+•// pid_t vfork (void); residente in (<unistd.h>). Crea un nuovo processo figlio, esattamente come fork, ma senza copiare lo spazio di indirizzamento. Fino a che il figlio non esegue una exec o exit, esso viene eseguito nello spazio di indirizzamento del genitore (tecnica Copy on Write). Assicura che il figlio venga eseguito per primo, fino a quando questi non chiama exec o exit. La funzione vfork viene utilizzata quando il processo generato ha lo scopo di eseguire (exec) un nuovo programma.
+
+•Avere due processi che eseguono esattamente lo stesso codice non è molto utile, allora nella pratica accade che si genera un secondo processo per affidargli l’esecuzione di un compito specifico (ad esempio, la gestione di una connessione dopo che questa è stata stabilita) e gli si fa eseguire un altro programma. Per questo si fa uso della exec. le funzioni della famiglia exec permettono di caricare un altro programma da disco sostituendo quest’ultimo all’immagine corrente; l’immagine precedente viene completamente cancellata. Exec è una famiglia di primitive ove il primo parametro specifica la residenza del file:
+	-// int execl (const char *path, const char *arg0, ... /* (char *)0 */ ); prende in input una lista
+	-// int execle (const char *path, const char *arg0, ... /* (char *)0, char *const envp[] */ ); prende in input una lista e delle variabili di ambiente da passare al programma come argv[0], argv[1], … , argv[n].
+	-// int execlp (const char *file, const char *arg0, ... /* (char *)0 */);  prende in input una lista e un riferimento ad un $path che sarà utilizzato dal programma specificato come primo parametro.
+	-// int execv(const char *path, char *const argv[]); prende in input un vector
+	-// int execve(const char *path, char *const argv[], char *const envp[]); prende in input un vector e delle variabili di ambiente da passare al programma come argv[0], argv[1], … , argv[n].
+	-// int execvp(const char *file, char *const argv[]);  prende in input un vector e un riferimento ad un $path che sarà utilizzato dal programma specificato come primo parametro.
+Importante: (char *arg0, char *arg1, … , char *argn, NULL) che deve essere terminata da un puntatore NULL !!.
+DA RICORDARE: in realtà sono tutte un front-end a execve. Quindi basterebbe utilizzare questa.
+Quando un processo chiama una funzione della famiglia exec esso viene completamente sostituito dal nuovo programma,mantiene la stessa process structure, ossia, ad esempio, il pid e il ppid del processo non cambia, dato che non viene creato un nuovo processo questa funzione rimpiazza semplicemente lo stack, lo heap, i dati e il testo del processo corrente con un nuovo programma letto da disco.
+
+
+I SEGNALI
+•I segnali sono interruzioni software: Il verificarsi di eventi inattesi deve essere comunicato ai processo. Forniscono un modo per gestire eventi asincroni ovvero, che possono verificarsi in qualsiasi momento. Un processo non si può limitare a controllare se un segnale si è verificato, deve anche comunicare al kernel cosa fare in caso di occorrenza di uno specifico segnale Tre sono le cose che un processo può chiedere al kernel di fare (azione associata ad un segnale):
+	- Ignorare il segnale: (tutti tranne SIGKILL e SIGSTOP); nel caso si decida di ignorare i segnali generati da eccezioni hardware (SIGFPE, SIGILL, e SIGSEGV) , il comportamento del processo è indefinito
+	- Intercettare il segnale: fornire una funzione da eseguire per un determinatosegnale
+	- Eseguire le azioni di default: ciascun segnale ha una azione di default associata; nella maggior parte dei casi, questa azione consiste nellaterminazionedel processo
+Trai vari segnali ricordiamo:
+	- SIGABRT: Interruzione anormale (abort) del processo. 
+	- SIGALRM: Segnale sollevato da alarm(). 
+	- SIGBUS: Errore di bus: "tentato accesso ad una porzione indefinita di memoria" ("access to undefined portion of memory object"). 
+	- SIGCHLD: Processo figlio terminato o fermato (oppure ripartito). 
+	- SIGCONT: Il processo può continuare, se era stato fermato. 
+	- SIGFPE:Eccezione in un numero in virgola mobile: "operazione aritmetica erronea" ("erroneous arithmetic operation"). 
+	- SIGHUP: generalmente viene sollevato quando un terminale viene chiuso. 
+	- SIGILL: Istruzione illegale. 
+	- SIGINT: Interruzione del processo. 
+	- SIGKILL: Terminazione immediata (kill) del processo. Questo segnale non può essere ignorato ed il processo che lo riceve non può eseguire delle operazioni di chiusura "morbida". 
+	- SIGPIPE: Se un processo che dovrebbe leggere da una pipe termina inaspettatamente, questo segnale viene inviato al programma che dovrebbe scrivere sulla pipe in questione. 
+	- SIGQUIT: Interruzione del processo. 
+	- SIGSEGV: Il programma ha generato un errore di segmentazione. 
+	- SIGSTOP: Ferma temporaneamente l'esecuzione del processo: questo segnale non può essere ignorato. 
+	- SIGTERM: Terminazione del programma; il comando kill invia questo segnale se non diversamente specificato. 
+	- SIGTSTP: Ferma temporaneamente l'esecuzione del processo. 
+	- SIGTTIN: Un processo in esecuzione in background tenta di leggere da terminale (in). 
+	- SIGTTOU: Un processo in esecuzione in background tenta di scrivere sul terminale (out). 
+	- SIGUSR1: Definito dall'utente. 
+	- SIGUSR2: Definito dall'utente. 
+	- SIGPOLL: Si è resa possibile un'operazione di input/output, permette il polling. 
+	- SIGPROF: Un conto alla rovescia impostato per il processo è terminato: misura il tempo di CPU usato dal processo e dal sistema per eseguire azioni istruite dal processo stesso. 
+	- SIGSYS: SystemCall errata. 
+	- SIGTRAP: L'esecuzione del processo ha raggiunto un breakpoint (trap), il debugger può informare di questo lo sviluppatore. 
+	- SIGURG: Sono disponibili dei dati urgenti per il processo su un socket. 
+	- SIGVTALRM: Un conto alla rovescia impostato per il processo è terminato: misura il tempo "virtuale" consumato dal solo processo ("virtual timer expired"). 
+	- SIGXCPU: Esaurito il tempo di CPU disponibile per il processo. 
+	- SIGXFSZ: Superata la dimensione massima consentita per i file per il processo. 
+	
+Tra le varie funzionalità dei segnali risiedono la concorrenza, la gestione di sezioni critiche. In questo ambito entrano in gioco le funzioni rientranti e le non rientranti:
+	- Un funzione rientrante è una funzione che può essere usata da più di un processo in modo concorrente senza corrompere i dati. Essa può essere interrotta in qualsiasi momento e riavviata in un momento successivo senza la perdita di dati. Usano variabili locali o proteggono i propri dati quando sono utilizzate le variabili globali. La Funzione rientrante: 
+		- Non mantiene dati statici in chiamate successive
+		- Non restituisce un puntatore a dati statici; tutti i dati sono passati da chi invoca la funzione
+		- Usa dati locali o assicura protezione ai dati globali facendone una copia locale
+		- Non deve chiamare alcuna funzione non-rientrante
+	- Una funzione non rientrante è una funzione che non può essere condivisa da più task a meno che la mutua esclusione alla funzione sia assicurata usando un semaforo o disabilitando le interruzioni durante le sezioni critiche di codice. In generale le funzioni non rientranti:
+		- Invocano malloc o free
+		- E’ noto che usano strutture dati statiche
+		- Sono parte della  libreria di I/O standard
+
+•// void *signal (int signo, void (*func)(int)); residente in (<signal.h>). E' la SystemCall che fornisce lo strumento per istruire il kernel ad eseguire una determinata azione quando il processo chiamante riceve un determinato segnale. Tale azione può essere:
+	- ignorare il segnale (SIG_IGN)
+	- far eseguire al kernel l'azione di default definita per tale  segnale (SIG_DFL)
+	- passare al kernel l'indirizzo di una funzione da eseguire quando si presenta tale segnale (function creata appositamente da me).
+Questa funzione che non ritorna nulla (void). int signo è un intero (o il nome del segnale occorso). func è il puntatore ad una funzione che prende il valore dj SIG_IGN se si vuole ignorare il segnale, SIG_DFL se si vuole agire di default oppure ud una function che creiamo appositamente per gestire l'evento segnalato.
+
+•// int kill(pid_t pid, int signo); situata in (<sys/types.h> e <signal>) è la SystemCall che permette di invare un segnale specificato da int signo al processo con id uguale a pid_t pid (se quest'ultimo è > 0), altrimenti se è = 0 viene ripetuto a tutti i processi che hanno lo stesso process grupp del processo invocante, invece se è < 0 viene inviato a tutti i processi con process group ID uguale al modulo di pid. Ricordiamo che un processo può mandare un segnale ad un altro processo se entrambi sono in esecuzione con gli stessi real o effective user ID oppure se viene eseguito il programma in modalità superutente.
+	-// int raise(int signo); residente in (<sys/types.h> e <signal>) è equivalente ad usare kill(getpid(),signo) che si autoinvia un segnale.
+Le function ritornano 0 se ok, < 0 in caso di errore, in particolare -1 se il processe con pid_t pid non esiste.
+
+•// unsigned int alarm (unsigned int seconds); situata in (<unistd.h>) è la SystemCall che istruisce il kernel a spedire il segnale SIGALRM al processo invocante dopo alcuni secondi specificati dalla variabile unsigned int seconds. Se la variabile second = 0 non schedula nessun alarm. Restituisce il numero di secondi rimanenti in casso di successo, = 0 se non è stato schedulato.
+
+•// int pause (void); situata in (<unistd.h>). E' la SystemCall che sospende il processo chiamante finché non è intercettato un segnale per poi restituire il controllo solo dopo che un gestore di segnale è eseguito e, a sua volta, restituisce il controllo. Ritorna -1 e pone errno uguale a EINTR.
+
+•// unsigned int sleep(unsigned int seconds); situata in (<unistd.h>) è la SystemCall che sospende il processo chiamante fino a che trascorre la quantità di tempo specificata dalla variabile unsigned int seconds, oppure il processo intercetta un segnale e il corrispondente gestore del segnale ritorna. Restituisce il numero di secondi rimanenti in casso di successo, = 0 se non è stato schedulato.
+
+•// int nanosleep(const struct timespec *req, struct timespec *rem); situata in (<unistd.h>) è la SystemCall che pone il processo in stato di sleep per il tempo specificato dalla variabile cost struct timespec *req. In caso di interruzione restituisce il tempo restante nella variabile struct timespec *rem. La funzione restituisce 0 se l'attesa viene completata, o -1 in caso di errore, nel qual caso errno assumerà uno dei valori:
+	- EINVAL se si è specificato un numero di secondi negativo o un numero di nanosecondi maggiore di 999.999.999 (1 secondo).
+	- EINTR se la funzione è stata interrotta da un segnale.
+Le variabili che fanno ricorso in questo caso sono di tipo: 
+	-// const struct timespec
+		{
+			time_t tv_sec; //secondi
+			long tv_nsec; //nanosecondi e deve essere compreso tra 0 e 999.999.999
+		};
+•// void abort(void); situata in (<stdlib.h>) è la SystemCall che invia il segnale SIGABRT al chiamante, equivale a consentirgli l’esecuzione di operazioni di pulizia prima della terminazione
+
+•// int sigprocmask(int how, const sigset_t *set, sigset_t *oset); situata in (<signal.h>) è la SystemCall che consente di specificare un insieme di segnali da bloccare, e restituisce la lista dei segnali che erano bloccati precedentemente. La varibile int how definisce se aggiungere segnali alla maschera corrente del processo (SIG_BLOCK), rimuoverli dalla maschera corrente (SIG_UNBLOCK) o sostituire completamente la maschera corrente con una nuova (SIG_SETMASK). La variabile const sigset_t *set definisce l’insieme dei segnali da bloccare, aggiungere o rimuovere dalla maschera corrente sulla base del parametro int how. La sigset_t *oset se non è NULL, conterrà la maschera precedente e dopo aver invocato sigprocmask, se qualche segnale non bloccato è pendente, almeno uno di tali segnali sarà consegnato al processo prima che sigprocmask ritorni.
+	•Tipo di dato sigset_t contiene un insieme di segnali ed un insieme di funzioni per manipolarlo:
+		-// int sigemptyset(sigset_t *set); /*Ritorna 0 se OK, -1 in caso di errore*/
+		-// int sigfillset(sigset_t *set); /*Ritorna 0 se OK, -1 in caso di errore*/
+		-// int sigaddset(sigset_t *set, int signo); /*Ritorna 0 se OK, -1 in caso di errore*/
+		-// int sigdelset(sigset_t *set, int signo); /*Ritorna 0 se OK, -1 in caso di errore*/
+		-// int sigismember(const sigset_t *set, int signo); /*Ritorna 1 se vero, O se falso, -1 in caso si errore*/
+		-// sigset_t mask_set; /* definisce una nuova maschera */ 
+		-// sigemptyset(&mask_set); /* svuota la maschera */
+		-// sigaddset(&mask_set, SIGTSTP); /* aggiunge i segnali TSTP e INT alla maschera */ 
+		-// sigaddset(&mask_set, SIGINT); /* aggiunge i segnali TSTP e INT alla maschera */ 
+		-// sigdelset(&mask_set, SIGTSTP); /* rimuove il segnale TSTP dall’insieme */
+		-// if (sigismember(&mask_set, SIGINT); /* controlla se il segnale INT è definito nell’insieme */
+	•int sigaction(int signo, const struct sigaction *act, struct sigaction *oact); situata in (<signal.h>) è la SystemCall che rappresenta il modo per evitare completamente race, è consentire al sistema di impostare la maschera dei segnali prima che sia chiamato il gestore del segnale. La variabile int signo è il numero del segnale la cui azione stiamo esaminando o modificando. La variabile const struct sigaction *act se il puntatore è non nullo, stiamo modificando l’azione, se oact è non nullo, il sistema ritorna l’azione precedente per il segnale attraverso il puntatore *oact.
+	La variabile struct utilizzata è:
+		-// struct sigaction {
+			void (*sa_handler)(int); sigset_t sa_mask;
+			int sa_flags;
+			void (*sa_sigaction)(int, siginfo_t *,void *);
+			};
+Quando si cambia l’azione per un segnale, se il campo sa_handler contiene l’indirizzo di una funzione per la sua gestione (e no SIG_IGN o SIG_DFL). Il campo sa_mask specifica l’insieme dei segnali che sono aggiunti alla maschera dei segnali prima che la funzione di gestione sia chiamata. Se e quando la funzione di gestione del segnale ritorna, la maschera dei segnali del processo è resettata al suo valore precedente. Il SO include il segnale attualmente in consegna nella maschera dei segnali quando il gestore è invocato. In questo modo siamo sicuri che mentre stiamo elaborando un dato segnale, un’altra occorrenza di quel segnale sarà bloccata fino a che non abbiamo completato la gestione del precedente.
+
+
+
+Pipe
+•Lo scambio di dati avviene attraverso
+	- pipe: operazioni di I/O su code FIFO, sincronizzate dal S.O.
+	- memoria condivisa: allocata e associata al processo attraverso system call
+	- La segnalazione di azioni avviene attraverso
+	- segnali (signal): interrupt software
+	- semafori: una generalizzazione dei semafori classici
+I processi che comunicano possono risiedere
+	- sulla stessa macchina (segnali, pipe, fifo, socket)
+	- su macchine diverse (socket)
+RICORDARE: IL PROCESSO CHE LEGGE DEVE ASPETTARE AL PROCESSO CHE SCRIVE
+	
+•Parlando delle Pipe: Il termine pipe è usato per indicare situazioni in cui si connette un flusso di dati da un processo ad un altro. Il meccanismo utilizzato dalla shell per connettere l'output di un comando all'input di un altro (pipeline).
+
+•PIPE ANONIMA è un canale di comunicazione (creato con pipe()), mantenuto a livello kernel, che unisce due processi:
+	- La comunicazione è unidirezionale (half-duplex) quindi una comunicazione bidirezionale si può realizzare utilizzando due pipe.
+	- Permette la comunicazione solo tra processi con un antenato comune
+	- Una pipe presenta due lati di accesso (in/out), ciascuno associato ad un descrittore di file(che può essere cambiato anche con quello standard)(processo separato per ciascun comando e collega lo standard output di uno allo standard input dell’altro usando una pipe).
+	- Il lato di lettura è acceduto invocando read()
+	- Il lato di scrittura è acceduto invocando write()
+	- Memorizza il suo input in un buffer (massima dimensione (PIPE_BUF) , ma è tipicamente intorno ai 4K)
+	- Quando un processo ha finito di usare un lato di una pipe chiude il descrittore con close()
+
+•// int pipe (int fd[2]); situata in (<unistd.h>) è la SystemCall che crea una pipe anonima e restituisce due descrittori di file, lato di lettura fd[0] (aperto in lettura) e lato di scrittura fd[1] (aperto in scrittura). Fallisce restituendo -1 se il kernel non ha più spazio per una nuova pipe; altrimenti restituisce 0.
+	•// int read(dove_deve_legge, dove_salvare, size); Lettura di una PIPE ANONIMA:
+		- avviene solo se il lato scrittura è stato chiuso allora read() restituisce 0 che indica la fine dell'input (dopo che sono stati letti tutti i dati)
+		- se la pipe è vuota e il lato di scrittura è ancora aperto, si sospende il processo affinchè il processo che sta scrivendo non scrive sul file che diventa disponibile qualche input
+		- se il processo tenta di leggere più byte di quelli presenti nel buffer associato, i byte disponibili vengono letti e read() restituisce il numero dei byte effettivamente letti.
+
+	•// int write(dove_deve_scrivere, contenuto, size); Scrittura di una PIPE ANONIMA
+		- se il lato di lettura è stato chiuso, write() fallisce (ritorna -1) ed allo scrittore è inviato un segnale SIGPIPE, la cui azione di default è di far terminare il ricevente (errno impostato a EPIPE).
+		- se scrive meno byte di quelli che una pipe può contenere, write() viene eseguita in modo atomico (non possono avvenire intrecci dei dati scritti da processi diversi sulla stessa pipe).
+		- se scrive più byte di quelli che una pipe può contenere (PIPE_BUF), non c'è garanzia di atomicità.
+		
+•Normalmente, il processo che crea una pipe successivamente invoca una fork(), creando un canale di IPC dal genitore al figlio o viceversa.
+	• La tipica sequenza di eventi è:
+		- il processo crea una pipe anonima (pipe())
+		- il processo crea un figlio (fork())
+		- lo scrittore chiude il suo lato di lettura della pipe ed il lettore chiude il suo lato scrittura (close()) quindi a seconda sia lettore o scrittore chiuderà fd[1] o fd[0].
+		- i processi comunicano usando write() e read()
+		- ogni processo chiude (close()) il suo descrittore quando ha finito
+		
+	• In generale, il processo padre: 
+		- Crea tante pipe quanti sono i processi figli meno uno
+		- Crea tanti processi figli quanti sono i comandi da eseguire
+		- Chiude tutte le estremità delle pipe
+		- Attende la terminazione di ciascun processo figlio
+	• Ciascun processo figlio:
+		- Chiude le estremità delle pipe che non usa
+		- Imposta le estremità delle pipe che usa sugli opportuni canali standard
+		- Invoca una funzione della famiglia exec() per eseguire il proprio comando
+Questo è l'unico metodo per l'utilizzo delle pipe anonime
+
+
+FIFO: Pipe con Nome
+•Le FIFO sono pipe che possono connettere due (o più) processi qualsiasi. Una FIFO è un tipo speciale di file che si comporta come le pipe anonime. La creazione di una FIFO è simile alla creazione di un file. Il pathname di una FIFO esiste all’interno del file system.
+
+•// int mkfifo(const char *filename, mode_t mode); situata in (<sys/stat.h>). E' la SystemCall che crea una pipe tipo fifo, se esiste già restituisce un errore EEXIST (in questo caso usare una open() ). Quindi 0 se ok altrimenti -1. (La maschera che andremo ad inserire è 0777 che è tutti i permessi a tutti gli utenti con un unmask di 022 ).
+
+•// int open(const char *path, mode_t mode); situata in (<sys/stat.h>) è la SystemCall che permette di aprire una fifo. Si differenzia dalla normale apertura di un file (oltre che ogni cosa che viene scritta viene fatta in coda e ciò che viene letto viene fatto sempre in testa) da :
+	- open(const char *path, O_RDONLY); in questo caso, la chiamata ad open si bloccherà; non ritorna fino a che un processo apre la stessa FIFO per scrittura
+ 	- open(const char *path, O_RDONLY | O_NONBLOCK); la chiamata ad open ha successo e ritorna immediatamente, anche se la FIFO non è stata aperta in scrittura da alcun processo
+	- open(const char *path, O_WRONLY); la chiamata ad open si bloccherà fino a che un processo apre la stessa FIFO in lettura
+	- open(const char *path, O_WRONLY | O_NONBLOCK); ritorna sempre immediatamente, ma se nessun processo ha la FIFO aperta in lettura, open ritornerà un errore, -1, e la FIFO non sarà aperta. Se un processo ha aperto la FIFO in lettura, il descrittore di file restituito può essere usato per scrivere al suo interno
+ATTENZIONE: come ogni altra open ritorna il file descriptor ove è aperta la pipe. Altrimenti -1.
+
+•// int read(int fildes, void *buf, size_t nbytes); è la SystemCall (<unistd.h>) che permette la lettura su fifo, memorizza gli nbytes e li salva nella varibile buf. L'output è il numero dei caratteri effettivamente letti (al più nbytes), altrimenti - 1 se l'operazione ha dato errore.
+
+•// int write(int fildes, const void *buf, size_t nbytes); è la SystemCall (<unistd.h>) che permette la scrittura su fifo dalla variabile buf (di almeno nbytes/8 caratteri). L'output è il numero dei caratteri effettivamente scritti (al più nbytes), altrimenti - 1 se l'operazione ha dato errore. Terminata la lettura aggiorna il seek all'ultimo+1 carattere letto.
+	
+•Se la FIFO è aperta in modalità bloccante:
+	- Una read() su una FIFO vuota: Aspetterà fino a che è disponibile qualche dato da leggere, se la FIFO è aperta in scrittura. Restituisce 0, se la FIFO non è aperta in scrittura
+	- Una write() su una FIFO: Aspetterà fino a che i dati possono essere scritti, se la FIFO è aperta in lettura. Genera un segnale SIGPIPE se la FIFO non è aperta in lettura
+•Se la FIFO è aperta in modalità non bloccante (O_NONBLOCK):
+	- Una read() su una FIFO vuota non bloccante: Restituisce un errore (EAGAIN) se la FIFO è aperta in scrittura. Restituisce 0, se la FIFO non è aperta in scrittura
+	- Una write() su una FIFO non bloccante: Genera un segnale SIGPIPE se la FIFO non è aperta in lettura. Se la FIFO è aperta in lettura, se il numero di byte da scrivere è <= di PIPE_BUF e se c’è spazio per il numero di byte specificato, sono trasferiti tutti i byte, altrimenti se non c’è spazio per tutti i byte specificati la write() ritorna immediatamente con un errore (EAGAIN). Viceversa se il numero di byte è > PIPE_BUF e se c’è spazio per almeno 1 byte nella FIFO, il kernel trasferisce tanti byte quanto spazio c’è nella FIFO e la write() restituisce il numero di byte scritti. Se la FIFO è piena, ritorna immediatamente con l’errore EAGAIN.
+	
+	
+SOKET: Network IPC
+•Due o più processi su differenti host, connessi ad una rete di comunicazione comune, comunicano scambiandosi messaggi (architettura modello client/server). In particolare:
+	- Il server è un host sempre attivo ed ha un indirizzo IP fisso.
+	- Il client comunica con il server e lo può contattare il server in qualunque momento inoltre può avere indirizzi IP dinamici e non comunica direttamente con gli altri client (eccetto comunicazione P2P).
+Affinché un processo su un host invii un messaggio a un processo su un altro host, il mittente deve identificare il processo destinatario tramite indirizzo IP univoco a 32 bit (4*8).L ’identificatore comprende sia l’indirizzo IP che i numeri di porta associati al processo in esecuzione su un host. Esempi di numeri di porta:
+	- HTTP server: 80
+	- Mail server: 25
+	- POP3 server: 114
+	- Https server: 443
+	- ...
+Esistono differenti tipi di protocolli di trasporto dati:
+	- TCP ( Transmission Control Protocol) è orientato alla connessione (è richiesto un setup fra i processi client e server), il trasporto affidabile fra i processi d’invio e di ricezione. Ha un controllo di flusso (il mittente non vuole sovraccaricare la rete e “strozza” il processo d’invio quando le rete è sovraccaricata). La pecca è la temporizzazione e l'ampiezza di banda minima.
+		• Programmazione con TCP in generale
+			• Il client sta per contattare il server
+				- Il processo server deve essere in corso di esecuzione
+				- Il server deve avere creato una socket (porta) per il benvenuto al contatto con il client
+			• Il client contatta il server:
+				- Creando una socket TCP
+				- Specificando l’indirizzo IP, il numero di porta del processo server
+				- Quando il client crea la socket: il client TCP stabilisce una connessione con il server TCP (handshake a tre vie)
+			• Il server sta venendo contattare dal cliente
+				- Crea una nuova socket per il processo server per comunicare con il client
+				- Consente al server di comunicare con più client
+				- Numeri di porta origine usati per distinguere i client
+		Dal punto di vista dell’applicazione, TCP fornisce un trasferimento di byte affidabile e ordinato tra client e server
+		
+• UDP ( User Datagram Protocol) non è orientato alla connessione, l'invio di dati avviene in modo rapido. La pecca è il trasferimento dati inaffidabile fra i processi d’invio e di ricezione inoltre non offre il setup della connessione, affidabilità, controllo di flusso, controllo della congestione, temporizzazione né ampiezza di banda minima.
+		• Programmazione con UDP in generale
+			- Non c’è “connessione” tra client e server
+			- Non c’è handshaking
+			- I dati trasmessi possono perdersi o arrivare a destinazione in un ordine diverso da quello d’invio
+				• Quando il client vuole contattare il server:
+					- Allega esplicitamente ad ogni pacchetto l’indirizzo IP e la porta di destinazione
+				• Quando il server viene contattato dal client:
+					- Deve estrarre l’indirizzo IP e la porta del mittente dal pacchetto ricevuto
+		Dal punto di vista dell’applicazione, UDP fornisce un trasferimento inaffidabile di gruppi di byte 
+	
+• Molte applicazioni di rete consistono in una coppia di programmi, detti client e server che risiedono su sistemi differenti. Quando questi due programmi vengono eseguiti, si crea un processo client e un processo server che comunicano tramite socket. Quando si crea un’applicazione di rete, compito primario è la scrittura del codice per il client e per il server
+
+• SOKET: Una socket è un meccanismo di comunicazione che consente di sviluppare sistemi client/server sia localmente, su una macchina locale, o attraverso una rete. Le socket sono create ed usate in modo differente dalle pipe poiché fanno una chiara distinzione tra i client ed i server. Esistono due modi principali per comunicare in rete:
+	• il connection oriented model (TCP)
+		- Stream socket: forniscono stream di dati affidabili, duplex, ordinati
+	• il connectionless oriented model (UDP)
+		- Socket a datagrammi: trasferiscono messaggi di dimensione variabile, preservando i confini ma senza garantire ordine o arrivo dei pacchetti
+
+• Step per il TCP: 
+	- Lato server
+		1) In primo luogo, un’applicazione server crea una socket mediante la system call socket() e non può essere condivisa con altri processi.
+        2) Il processo server associa un nome assegnato alla socket usando la system call bind(), alla socket (sulle socket locali si associa un filename nel file system, per le socket di rete, il nome corrisponde ad un identificatore di servizio "numero di porta/ punto di accesso" rilevante per la particolare rete a cui i client possono connettersi). In base all’identificatore consente al sistema operativo di instradare le connessioni in arrivo specificando un nome particolare di porta al corretto processo server
+        3) Il processo server poi aspetta che un client si connetta alla socket a cui è stato dato il nome attreverso la system call listen() crea una coda di connessioni in arrivo
+		4) Il server le può rifiutare o accettare usando la system call accept()
+		5) Se il processo server invoca accept() viene creata una nuova socket distinta da quella dotata di nome (three-way handshake). Questa nuova socket è usata solamente per comunicare con il client specifico (Questo può implementare la multiutenza, oppure la monoutenza aspettando il loro turno nella fifo). Attenzione, La socket dotata di nome resta a disposizione per ulteriori connessioni con altri client.
+	- Lato  client
+		1) Inizialmente Il client crea una socket invocando socket()
+		2) Successivamente invoca connect() per stabilire una connessione con il server usando la socket del server come indirizzo
+		3) Una volta create, le socket possono essere usate come dei descrittori di file a basso livello, fornendo una comunicazione dati a due vie.
+
+• Le socket sono caratterizzate da tre attributi: dominio, tipo e protocollo. Esse hanno anche un indirizzo usato come nome, il formato degli indirizzi varia a seconda del dominio, noto anche come famiglia di protocolli. Ciascuna famiglia di protocolli può usare una o più famiglie di 29 indirizzi per definire il formato dell’indirizzo. I domini specificano il mezzo della rete che la comunicazione socket userà. Il più comune dominio socket è AF_INET, che si riferisce all’Internet Networking, Il protocollo usato è Internet Protocol (IP), che ha solo una famiglia di indirizzi, impone un particolare modo di specificare i computer su una rete. Quando un client si connette attraverso la rete mediante una socket, esso necessita dell’indirizzo IP del server. Poichè possono esserci vari servizi che il server offre, si specifica anche la porta al medesimo indirizzo IP: Le socket sono gli estremi della comunicazione che devono essere legate alle porte prima che avvenga la comunicazione. Attenzione un dominio socket può avere diversi modi per comunicare, ognuno dei quali potrebbe avere caratteristiche differenti.
+
+• Le socket, come detto, si dividono in:
+	- Socket stream specificate dal tipo , sono implementate nel dominio AF_INET dalle connessioni TCP/IP forniscono una connessione che è un flusso di byte a due vie affidabile e sequenziato. E’ garantito che i dati non siano persi, duplicati o riordinati senza un’indicazione dell’occorrenza di un errore. I messaggi più grandi sono frammentati, trasmessi, e riassemblati. E’ come un flusso su file, poiché accetta grandi quantità di dati e li scrive su dischi di basso livello in blocchi più piccoli. 
+	- Socket datagram, specificata dal tipo SOCK_DGRAM, non stabilisce né mantiene una connessione e sono implementate nel dominio AF_INET dalle connessioni UDP/IP e forniscono un servizio non affidabile e non sequenziato. C’è anche un limite sulla dimensione del datagrammma che può essere inviato. E’ trasmesso come un messaggio di rete singolo che può andar perso, duplicato o arrivare fuori sequenza. Tuttavia, esse sono poco costose in termini di risorse, poiché le connessioni di rete non devono essere mantenute e sono veloci, perché non c’è associato un tempo di impostazione della connessione.
+
+•// int socket(int dominio, int tipo, int protocollo); situata in (<sys/socket.h>) è la SystemCall che crea una socket e restituisce un descrittore che può essere usato per accedere alla socket stessa, altrimenti -1 in caso di errore.
+	• Il parametro "int dominio" specifica la famiglia di indirizzi e possono essere: 
+		- AF_UNIX: UNIX (file system socket). Usato per socket locali implementato via filesystem di unix.
+		- AF_INET: ARPA Internet Protocols (UNIX network sockets). Usato per le soket di rete TCP/IP per unix.
+		- AF_ISO: ISO standard protocols (Non POSIX.1)
+		- AF_XNS: Xerox Network System Protocols (Non POSIX.1)
+		- AF_INET6: ARPA Internet Protocols verione 6 (UNIX network sockets)
+		- AF_UNSPEC: non specificato.
+	• Il paramentro "int tipo" specifica il tipo e le caratteri della connesione:
+		- SOCK_STREAM per connessioni TCP.
+		- SOCK_DIAGRAMM per connessioni UDP.
+	• Il Parametro "int protocollo" usato per la comunicazione, è determinato dal tipo di socket e dal dominio solitamente il valore è 0 per ottenere protoccolli default dai domini specificati, oppure < 0 per uno specificato protocollo del dominio (se possiede più protocolli).
+	
+• Un indirizzo identifica un lato socket in un particolare dominio di comunicazione (Il formato dell’indirizzo è specifico al dominio). Per poter fornire tali indirizzi alle funzioni per le socket, gli indirizzi subiscono un cast ad una struttura indirizzo generica.
+	-// struct sockaddr { 
+		sa_family_t	sa_family; 
+		char        sa_data[];
+		};
+
+• Ciascun dominio richiede il proprio formato di indirizzo: 
+    • Per una socket al dominio AF_UNIX, l’indirizzo è descritto da una struttura, sockaddr_un, definita nel file <sys/un.h>
+	-// struct sockaddr_un {
+		short sa_family;	/* Flag AF_UNIX */
+		char sun_path[];	/* Pathname */
+		};
+
+    • Per una socket al dominio AF_INET, l’indirizzo è descritto da una struttura, sockaddr_in, definita nel file <netinet/in.h>
+	-// struct sockaddr_in {
+		short sa_family; /* Flag AF_INET */ 
+		short sin_port; /* Numero di porta */ 
+		struct in_addr sin_addr; /* indir. IP */
+		};
+			-// struct in_addr { 
+				u_long s_addr; /* 4 byte usati per definirli nella struct sockaddr_in */  
+				};
+
+•// int bind(int sockfd, struct sockaddr *address, size_t len); situata in (<sys/socket.h>) è la SystemCall che assegna un nome alla socket, in particolare assegna l’indirizzo specificato nel parametro, address, alla socket senza nome associata con il descrittore di file sockfd. La lunghezza della struttura dell’indirizzo è passato come len. Resistuisce 0 se ok altrimenti -1 in caso di errore.
+
+•// int listen(int sockfd, int backlog); situata in (<sys/socket.h>) è la SystemCall che permette di creare una coda (di massimo size backlog di connessioni accentanti) per memorizzare le richieste pendenti per accettare le connessioni in arrivo sulla soket principale.
+
+•// int accept(int sockfd, struct sockaddr *address, size_t *len); situata in (<sys/socket.h>) è la SystemCall che ritorna quando un programma client tenta di connettersi alla socket specificata dal parametro int sockfd: La funzione accept() crea una nuova socket per comunicare con il client e restituisce il suo descrittore (La nuova socket avrà lo stesso tipo della socket in ascolto del server), altrimenti -1 se si è verificato un errore. L’indirizzo del client chiamante sarà posto nella struttura sockaddr puntata da address. Il parametro len (dato prima di chiamare accept()) specifica la lunghezza della struttura del client. Al ritorno len sarà impostato alla lunghezza reale della struttura dell’indirizzo del client chiamante.
+
+•// int connect(int sockfd, struct sockaddr *address, size_t len); situata in (<sys/socket.h>) è la SystemCall che permette ai client di connettersi al server stabilendo una connessione tra una socket senza nome e la socket del server in ascolto: la socket "int sockfd" è connessa alla socket del server specificata dal parametro "struct sockaddr *address" che ha lunghezza "size_t len". Se dopo un certo periodo di tempo la connect() fallisce è si interrompe, se invece è bloccata per una signal, si interrompe ma poi ritenterà nuovamente. Restituisce 0 se OK, -1 in caso di errore
+
+• Una volta stabilita la connessione fra client e server, si possono usare le system call send() e recv() per trasmettere e ricevere dati attraverso le socket:
+situare in <sys/types.h> e <sys/socket.h>
+    -// int send(int sockfd, void *buffer, int length, int flags);
+    -// int recv(int sockfd, void *buffer, int length, int flags);
+se flags vale 0, allora send() e recv() equivalgono, rispettivamente alle system call write() e read(). Altrimenti flags può assumere i seguenti valori.
+    Per quanto riguarda send():
+        - MSG_OOB: il processo invia dati “out of band”;
+        - MSG_DONTROUTE: vengono ignorate le condizioni di routing dei pacchetti sottostanti al protocollo utilizzato
+    Per quanto riguarda recv() invece flags può assumere i seguenti valori:
+        - MSG_PEEK: i dati vengono letti, ma non “consumati” in modo che una successiva recv() riceverà ancora le stesse informazioni
+
+•// int close(int sockfd) chiude le socket.
+
+
+THREAD
+• I processi concorrenti velocizzano l’esecuzione delle applicazioni, ma i context switch introducono un elevato overhead. Con thread di controllo multipli è possibile sviluppare programmi in grado di eseguire più di un compito (task) alla volta nell’ambito di un singolo processo. Ogni thread gestisce un compito separato. I thread hanno accesso allo stesso spazio di indirizzi di memoria e di descrittori di file. In particolare utilizziamo:
+	- Un processo singolo che ha più compiti da risolvere serializza implicitamente tali task poiché c’è solo un thread di controllo
+	- Con più thread di controllo, l’elaborazione dei compiti indipendenti può essere intrecciata assegnando un thread separato per ogni compito
+	- I programmi interattivi possono ottenere migliori tempi di risposta utilizzando thread multipli per separare parti di programma relative ad input degli utenti e ad output di altre parti del programma
+• Un thread consiste delle informazioni necessarie per rappresentare un contesto d’esecuzione e ha accesso allo spazio di indirizzi del processo ed eredita l’ambiente e la maschera dei segnali in un specifico processo:
+	- Thread ID (rappresentato da un tipo di dato pthread_t) che identifica il thread in un processo
+	- insieme di valori dei registri
+	- stack
+	- politica di scheduling e relativa priorità
+	- Maschera per i segnali
+	- Variabile errno
+	- Dati specifici del thread
+Ogni cosa all’interno di un processo è condivisibile tra i thread di un processo:
+	- Testo del programma eseguibile
+	- Memoria globale e di heap del programma
+	- Descrittori di file
+Inoltre i thread non condividono l’ID del processo e sono implementati come processi che condividono più informazioni del normale. I thread sono visibili come processi separati dal comando ps. Tutti i thread di un processo sono messi nello stesso gruppo di thread (Tutti i membri del gruppo condividono lo stesso PID)
+
+CREAZIONE THREAD
+•// int pthread_create(pthread_t *tidp, const pthread_attr_t *attr, void *(*start_rtn)(void *), void *arg) inizia l'esecuzione come in singolo processo con un singolo thread di controllo, man mano che l'esecuzione andrà avanti il comportamento va separandosi prendendo forma di thread master. Resistuisce numero di errore se fallisce altrimeti 0 se tutto ok. In questo caso: 
+    - La locazione di memoria puntata da tidp è impostata all’ID del del nuovo thread creato, 
+    - Il nuovo thread inizia l’esecuzione all’indirizzo della funzione start_rtn. 
+    - Attenzione se è necessario passare più di un argomento alla funzione strart_rtn, bisogna memorizzarli in una struttura e passare l’indirizzo della struttura in arg. 
+    - Si usa la variabile attr per modificare gli attributi di default associando questi attributi ai thread che creiamo
+
+•// pthread_t pthread_self(void); situata in (<pthread.h>) è la SystemCall che restituisce l'ID del thread chiamante che il proprio job. (Questa funzione può essere usata con pthread_equal quando un thread ha bisogno di identificare le strutture dati etichettate con il proprio ID di thread).
+
+•// int pthread_equal (pthread_t tid1, phtread_t tid2); situata in (<pthread.h>) è la SystemCall confronta i thread con id tid1 e tid2 e controlla che siano diversi o uguali. Restituisce valore nullo != 0 se uguali, altrimenti 0 se sono diversi.
+
+TERMINAZIONE THREAD
+•Esistono 2 modi per terminare un thread:
+	-// exit, Exit o _exit che termina l'intero processo con tutti i thread relativi, praticamente è come se fosse la exit nel main (termina l'intero programma)
+	-// void pthread_exit(void *rval_ptr); situata in (<pthread.h>) è la SystemCall che fa terminare thread torna dalla routine di avvio. Il valore di ritorno è il codice di uscita del thread. (può essere usato per passare più di un valore singolo)
+
+ALTRE FUNZIONI
+•// int pthread_join(pthread_t thread, void **rval_ptr); situata in (<pthread.h>) è la SystemCall che ASPETTA il thread e lo pone in stato detach "distaccato" che può riutilizzare le risorse appena finisce. Ritorna 0 se ok altrimenti != da 0. Questa function restituisce il risultato del thread in rval_ptr come output.
+
+•// int pthread_cancel(pthread_t tid); situata in (<pthread.h>) è la SystemCall che impone al thread tid la richiesta di essere cancellato. Chi richiede può ignorare o controllare come è cancellato. (non attende che il thread termini, ma effettua solamente la richiesta). Restituisce 0 se OK, numero di errore se fallisce
+
+•// int pthread_detach(pthread_t tid); situata in (<pthread.h>) è la SystemCall che distacca un thread. Restituisce 0 se OK, numero di errore se fallisce.
+	
+• SIMILITUIDINI DEI THREAD CON I PROCESSI 
+	processi	thread			spiegazione del comando
+	- fork		pthread_create	Crea un nuovo flusso di controllo		
+	- exit		pthread_exit	Esce da un flusso di controllo esistente		
+	- waitpid	pthread_join	Acquisisce lo stato di uscita dal flusso di controllo		
+	- getpid	pthread_self	Determina l’id del flusso di controllo		
+	- abort		pthread_cancel	Richiede la terminazione anomala del flusso di controllo		
+
+• Attributi esclusivi dei thread (paramentro numero 2 della pthread_create)
+	-// int pthread_attr_init(pthread_attr_t *attr); situata in (<pthread.h>) per inizializzare la struttura pthread_attr_t
+	-// int pthread_attr_destroy(pthread_attr_t *attr);situata in (<pthread.h>) per liberare la memoria della struttura pthread_attr_t 
+funzioni separate per interrogare ed impostare ciascun attributo:
+	-// int pthread_equal(pthread_t t1, pthread_t t2); confronta i thread_id di t1 e t2
+	-// int pthread_attr_init(pthread_attr_t *attr); inizializza gli attributi con il valore di default
+	-// int pthread_attr_destroy(pthread_attr_t *attr); distrugge gli attributi e il comportamento dell’attributo distrutto è indefinito
+	-// int pthread_attr_getdetachstate(const pthread_attr_t *attr,int *detachstate); ritorna lo stato di detach del valore dell’attributo
+	-// int pthread_attr_setdetachstate(const pthread_attr_t *attr, int detachstate); assegna lo stato di detach del valore dell’attributo 
+In genere per tutti gli attributi esistono le funzioni pthread_get e pthread_set.
+
+•Valori di default
+	- int scope				PTHREAD_SCOPE_PROCESS		competizione sullerisorse all’interno di un processo
+	- int detachstate		PTHREAD_CREATE_JOINABLE		joinable con altri threads				
+	- void *stackaddr		NULL						allocato dal sistema
+	- size_t *stacksize		NULL						1 megabyte
+	- priority				NULL						priorità del threadpadre
+	- int schedpolicy		SCHED_OTHER					determinata dal sistema
+	- ineritsched			PTHREAD_EXPLICIT_SCHED		attributi di scheduling stabiliti esplicitamente, es. policy
+
+•Valori assegnabili
+	- scope			PTHREAD_SCOPE_PROCESS o PTHREAD_SCOPE_SYSTEM 
+	- detachstate	PTHREAD_CREATE_JOINABLE o PTHREAD_CREATE_DETACHED
+	- stackaddr		NULL
+	- stacksize		NULL o PTHREAD_STACK_MIN
+	- priority		NULL
+	- schedpolicy	SCHED_OTHER o SCHED_FIFO o SCHED_RR 
+	- ineritsched	PTHREAD_EXPLICIT_SCHED o PTHREAD_EXPLICIT_SCHED
+
+•Esempio:
+Se non siamo interessati allo stato di terminazione di un thread esistente, possiamo usare pthread_detach per consentire al sistema operativo di reclamare le risorse del thread quando il thread esce
+Se sappiamo di non aver bisogno dello stato di terminazione del thread nel momento in cui lo creiamo, è possibile avviare il thread nello stato distaccato modificando l’attributo detachstate nella struttura pthread_attr_t
+Possiamo usare la funzione pthread_attr_setdetachstate per impostare l’attributo detachstate del thread ad uno dei due valori
+	- PTHREAD_CREATE_DETACHED: per avviare il thread nello stato distaccato-> quando non dobbiamo aspettarlo con la join, ma possiamo fare richiesta di terminazione con pthread_detach
+	- PTHREAD_CREATE_JOINABLE: per avviare il thread normalmente, così il suo stato di terminazione può essere recuperato dalle applicazioni. Si usa quando aspetta la terminazione con la pthread_join per poter fare altre cose
+
+•// int pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate); situata in (<pthread.h>) è la SystemCall che è usata per determinare l’attributo detachstate corrente.
+
+•// int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate); situata in (<pthread.h>) è la SystemCall che setta la struct pthread_attr_t al thread.
+
+•// int pthread_once(pthread_once_t *initflag, void (*init_routine) (void)); situata in (<pthread.h>) è la SystemCall che  assicura che una routine di inizializzazione sarà eseguita solo una volta senza curarsi di quanti thread nel processo la invocano. (garantisce che la funzione di inizializzazione è chiamata una ed una sola volta). Restituisce 0 se OK, numero di errore se fallisce.
+	-//	pthread_once_t initflag = PTHREAD_ONCE_INIT; variabile globale che garantisce che la funzione di inizializzazione è chiamata una ed una sola volta (è utilizzata per determinare se la funzione è stata chiamata in precedenza).
+
+THREAD E SEGNALI
+• Ogni thread ha una propria maschera di segnali. La disposizione del segnale è condivisa da tutti i thread del processo. I thread individualmente possono bloccare i segnali, ma quando un thread modifica l’azione associata con un dato segnale, tutti i thread condividono l’azione. Se un thread sceglie di ignorare un dato segnale, un altro thread può annullare quella scelta, ripristinando la disposizione di default o installando un gestore di segnale.
+• I segnali sono consegnati ad un singolo thread nel processo. Se il segnale è relativo a un errore hardware, solitamente il segnale è inviato al thread la cui azione ha causato l’evento mentre invece gli altri segnali sono consegnati ad un thread arbitrario.
+
+•// int pthread_kill (pthread_t thread, int signo); situata in (<signal.h>) invia i segnali ai thread. Con signo uguale a 0, possiamo verificare l’esistenza del thread. (Se l’azione di default per il segnale è di terminare il processo allora l’invio del segnale a un thread terminerà l’intero processo).
+
+•// int clone(int (*fn) (void *), void *child_stack, int flags, void *arg); Il kernel di Linux usa la funzione clone per creare nuovi processi/thread. Un programma può chiamare direttamente clone per produrre un programma multithread; ciò rende il programma specifico per Linux, poiché non è conforme ad alcuno standard esterno. I flag controllano quali risorse genitore e figlio condividono: 
+	-possono condividere da tutto (memoria, gestori dei segnali, file aperti,…) o niente. (Mentre con la fork il figlio eredita le risorse del padre, con clone è possibile non condividere nulla)
+Le librerie per i thread utilizzano la clone al loro interno, e rendono trasparente gli aggiornamenti del kernel agli utenti
+	 Flag			 Se settato …										 Se non settato …	
+	CLONE_VM		Crea un nuovo thread								Crea un nuovo processo	
+	CLONE_FS		Condivide umask, radice e directory di lavoro		Non le condivide	
+	CLONE_FILES		Condivide i descrittori di file						Copia i descrittori di file	
+	CLONE_SIGHAND	Condivide	la	tabella	di gestori di segnale		Copia la tabella	
+	CLONE_PID		Il nuovo thread recupera il vecchio PID				Il nuovo thread prende il proprio PID	71
+•Esiste un numero massimo di threads supportati precisamente PTHREADS_THREADS_MAX in <limits.h>
+
+
+MUTEX E VARIABILI CONDIZIONE (in <pthread.h>)
+•Quando molteplici thread di un processo condividono la stessa memoria è necessario che ciascun thread mantenga la coerenza dei propri dati. un thread può modificare una variabile che altri thread possono leggere o modificare, dobbiamo sincronizzare i thread per assicurare che questi non utilizzino un valore non valido quando accedono al contenuto di memoria della variabile.
+Esempio: 
+	- Il thread A legge la variabile e poi scrive un nuovo valore, ma l’operazione di scrittura richiede due cicli di memoria
+	- Se il thread B legge la stessa variabile tra i due cicli di scrittura, il valore sarà inconsistente
+Risoluzione (tramite il lock):
+	- Se il thread B intende leggere la variabile, allora deve acquisire un lock
+	- Similmente, quando il thread A aggiorna la variabile, deve acquisire lo stesso lock
+In questo modo, il thread B non sarà in grado di leggere la variabile fino a che il thread A rilascia il lock.
+Generalmente:
+E necessario sincronizzarsi è quando due o più thread cercano di modificare la stessa variabile nello stesso tempo (Race condition, con operazioni NON atomiche, se fossero atomiche non c'è la race condition). L’operazione di incremento è suddivisa in cinque passi:
+	- Lock sulla variabile di controllo mutex (un thread già usando la variabile)
+	- Leggere la locazione di memoria in un registro
+	- Incrementare il valore nel registro
+	- Scrivere il nuovo valore nella locazione di memoria
+	- Unlock sulla variabile di controllo mutex (un thread ha rilasciato la variabile)
+Tuttavia, nei moderni calcolatori, gli accessi in memoria avvengono con cicli di bus multipli e i sistemi multiprocessore generalmente intrecciano cicli di bus tra processori multipli, dunque non c’è alcuna garanzia che i nostri dati siano sequenzialmente consistenti
+
+•Esistono a disposizione due primitive per la sincronizzazione dei thread nei processi: mutex e variabili di condizione
+
+MUTEX
+Un (mutual exclusion) è un oggetto che permette a processi o thread concorrenti di sincronizzare l’accesso a dati condivisi. Un mutex possiede due stati, bloccato e non bloccato. Quando un mutex è bloccato da un thread, gli altri thread che tentano di bloccarlo restano in attesa. Quando il thread bloccante rilascia il mutex, uno dei thread in attesa lo acquisisce. Ogni volta che un processo o thread ha bisogno di accedere ai dati condivisi, acquisisce il mutex, solo quando l’operazione è terminata, il mutex viene rilasciato. Il codice normalmente è del tipo:  lock_the_mutex(…); regione critica;  unlock_the_mutex(…).
+
+•// pthread_mutex_t "nomemutex". Un mutex è una variabile rappresentata dal tipo di dato. Prima di usare un mutex è necessario inizializzarlo in modo:
+- Maniera statica impostandolo al valore della costante PTHREAD_MUTEX_INITIALIZER.
+-// int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr); Per allocare un mutex. Restituiscono 0 se tutto ok altrimenti no.
+-// int pthread_mutex_destroy(pthread_mutex_t *mutex); Per deallocare un mutex. Restituiscono 0 se tutto ok altrimenti no.
+
+• Attributi Per default di un mutex può essere usato solo da thread che appartengono allo stesso processo. Utilizzando l’attributo PTHREAD_PROCESS_SHARED si permette a thread di altri processi di utilizzare il mutex (altrimenti si usa PTHREAD_PROCESS_PRIVATE). Gli oggetti attributo vanno inizializzati e, se non più necessari, distrutti per non sprecare le risorse di memoria del processo e di sistema
+-// int pthread_mutexattr_destroy(pthread_mutexattr_t *attr); Per allocare dinamicamente gli attributi di un mutex. Restituiscono 0 se tutto ok altrimenti no.
+-// int pthread_mutexattr_init(pthread_mutexattr_t *attr); Per deallocare dinamicamente gli attributi di un mutex restituiscono. Restituiscono 0 se tutto ok altrimenti no.
+-// int pthread_mutexattr_setpshared(pthread_mutexattr_t*attr, int pshared); assegnare l’attributo PTHREAD_PROCESS_SHARED. Il primo parametro rappresenta l’oggetto attributo inizializzato con pthread_mutexattr_init(), Il secondo parametro contiene il valore dell’attributo. Restituisce 0 se OK, numero di errore se fallisce.
+-// int pthread_mutexattr_getpshared(pthread_mutexattr_t*attr, int *pshared): Per sapere quale sia il valore dell’attributo. Restituisce 0 se OK, numero di errore se fallisce.
+
+•// pthread_mutex_lock(pthread_mutex_t  *mutex); Per bloccare un mutex di un thread. La funzione ritorna quando il mutex è stato bloccato dal thread chiamante. Il mutex resta bloccato fino a quando non è sbloccato dal thread chiamante.
+
+•// pthread_mutex_unlock(pthread_mutex_t  *mutex);	Per sbloccare un mutex di un thread. Se vi sono più thread in attesa di acquisire il mutex, la politica di scheduling dei thread stabilisce chi lo acquisisce
+
+•// pthread_mutex_trylock(pthread_mutex_t  *mutex); Per acquisire il blocco o restituire codice di errore (EBUSY), senza bloccare realmente. Tale chiamata permette di far decidere se ci sono alternative rispetto alla semplice attesa
+
+
+
+VARIABILI CONDIZIONI
+•Le variabili condizione costituiscono un ulteriore meccanismo di sincronizzazione per i thread. Mentre i mutex implementano la sincronizzazione controllando l’accesso dei thread ai dati usando il polling, le variabili di condizione permettono di sincronizzare i thread sulla base dell’attuale valore dei dati (senza polling). Una variabile di condizione è sempre associata ad un mutex lock. Quando un altro thread causerà l’occorrenza di tale evento, uno o più thread in attesa riceveranno un segnale e si risveglieranno. 
+•Le variabili condizione hanno tre componenti:
+	- Il predicato è la condizione (o il valore) che un thread controllerà per determinare se deve attendere;
+	- Il mutex è il meccanismo che protegge il predicato;
+	- La variabile condizione è il meccanismo con cui il thread attende il verificarsi della condizione.
+
+Viene inizializzato in maniera statica impostandolo al valore della costante pthread_cond_t "nomecondizione" a PTHREAD_COND_INITIALIZER.
+•// pthread_cond_init(); per alloracare, inizializzare e successivamente usare la variabile di condizione pthread_cond_t. Restituisce 0 se OK, numero errore se falliscono.
+•// pthread_cond_destroy(); per deallocare una variabile condizione prima di liberare la memoria. Restituisce 0 se OK, numero errore se falliscono.
+
+•// int pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr); attendere su una variabile condizione per un tempo indefinito. restituiscono 0 se OK, numero errore se falliscono.
+•// int pthread_cond_signal(pthread_cond_t *cptr); Quando la condizione si verifica, si può risvegliare almeno un thread in attesa. restituiscono 0 se OK, numero errore se falliscono.
+•// int pthread_cond_broadcast(pthread_cond_t *cptr); Quando la condizione si verifica, si può risvegliare tutti i thread in attesa.restituiscono 0 se OK, numero errore se falliscono.
+•// int pthread_cond_timedwait(pthread_cond_t *cptr, pthread_mutex_t*mptr, const struct timespec *abstime); attendere su una variabile condizione per un tempo specificato.restituiscono 0 se OK, numero errore se falliscono.
+
+• Sequenza di azioni delle variabili di condizione:
+Thread principale:	
+	- Dichiara ed inizializza dati/variabili globali che richiedono sincronizzazione	
+	- Dichiara ed inizializza una variabile condizione	
+	- Dichiara ed inizializza un mutex associato	
+	- Crea thread A e B	
+
+Thread A:
+	- Esegue fino al punto in cui una certa condizione deve verificarsi
+	- Lock il mutex associato e controlla il valore di una variabile globale
+	- Chiama pthread_cond_wait () per effettuare una wait bloccante in attesa del risveglio da parte del thread B (automaticamente  
+	e atomicamente  corrisponde  ad un unlock del mutex associato in modo tale che possa essere usato dal thread B). Quando risvegliato, lock il mutex in modo automatico e atomico.
+	- Unlock il mutex Continua	
+	- Unlock il mutex in modo esplicito		
+	- Continua		
+	
+Thread B:
+	- Lavora
+	- Lock il mutex associato	
+	- Modifica il valore della variabile globale su cui il thread A è in attesa	
+	- Controlla il valore della variabile globale di attesa del thread A. Se si verifica la condizione desiderata, risveglia il thread A invocando -pthread_cond_signa l()
+	- Unlock il mutex 
+	- Continua	
+	
+Thread principale:
+	- Join / Continua
+
+• Il mutex sono per il locking e la variabile di condizione (associata ad un mutex) è per l'attesa
+
+
+
+SEMAFORI POSIX
+• Un semaforo è una primitiva usata per fornire un meccanismo di sincronizzazione tra vari processi o vari thread di un processo. Possono essere:
+	- Semaforo binario: un semaforo che può assumere solo i valori 0 (bloccato) e 1 (sbloccato). 
+	- Semaforo contatore: un semaforo che può assumere i valori 0 (bloccato) e k (se il valore è 0<x<=k è sbloccato) 
+•	Possiamo elencare tre differenze tra i semafori, i mutex e le variabili condizione:
+	- Un mutex deve sempre essere sbloccato dal thread che lo ha bloccato, mentre un’operazione post su di un semaforo non deve essere necessariamente effettuata dallo stesso thread che ha invocato l’operazione wait sul semaforo
+	- Un mutex può essere nello stato bloccato o sbloccato (uno stato binario simile al semaforo binario)
+	- Poiché un semaforo ha uno stato associato con esso (il contatore), un’operazione post viene sempre ricordata. (Quando una variabile condizione è segnalata, se nessun thread è in attesa per essa, il segnale viene perso)
+• Possono suddividersi di 3 tipi
+	- Basati su nome ed identificati da nomi Posix per IPC
+	- Basati su memoria e memorizzati in memoria condivisa
+	- I semafori nella versione System V (mantenuti all’interno del kernel)
+•Un processo può eseguire 3 operazioni sui semafori:
+	- Creazione: richiede di inizializzare anche il valore di partenza (0 o 1 per i semafori binari)
+	- Wait (o anche P): testa il valore del semaforo, si blocca se il valore ≤ 0, oppure decrementa il valore del semaforo una volta che risulta > 0
+	- Post (o anche V o Signal) : incrementa il valore del semaforo. Se un processo è in attesa che il valore del semaforo sia >0, allora tale processo può essere risvegliato.
+Sono tutte e 3 operazioni atomiche.
+
+SEMAFORI CON NOME
+•// sem_t *sem_open(const char *name, int oflag, mode_t mode, int value); situata in (<semaphore.h>). Crea un nuovo semaforo con nome o apre un semaforo esistente. Un semaforo con nome può sempre essere usato per sincronizzare sia i thread che i processi. l'argomento const char *name può essere un nome o un path. Il secondo campo int oflag può essere 0, O_CREAT oppure O_CREAT|O_EXCL. Il valore massimo non può superare int value l'ultimo argomento.
+
+•// int sem_close(sem_t *sem); situata in (<semaphore.h>). Chiude un semaforo aperto. Questa operazione si verifica automaticamente anche quando viene terminato (volontariamente o involontariamente) un processo per qualsiasi semaforo con nome aperto
+
+•// int sem_wait(sem_t *sem); situata in (<semaphore.h>). Testa il valore del semaforo specificato, e se il valore è maggiore di 0, il valore è decrementato e la funzione ritorna immediatamente. Se il valore è 0 quando la funzione è invocata, il thread chiamante è messo in attesa (sleep) fino a che il valore del semaforo diventa maggiore di 0, momento in cui il valore sarà decrementato e la funzione ritorna
+
+•// int sem_trywait(sem_t *sem); situata in (<semaphore.h>). è una sem_wait ma non pone il thread in attesa nel caso in cui il valore del semaforo sia 0. Invece, viene restituito l’errore EAGAIN.
+ 
+•//  int sem_post(sem_t *sem); situata in (<semaphore.h>). Incrementa il valore del semaforo di 1 e risveglia qualsiasi thread in attesa che il suo valore diventi positivo.
+
+•// int sem_getvalue(sem_t *sem,int *valp); situata in (<semaphore.h>). Restituisce il valore corrente del semaforo nell’intero puntato da value(creazione). Se il semaforo è bloccato allora il valore restituito è 0 o un numero negativo il cui valore assoluto è il numero di thread in attesa che il semaforo sia sbloccato
+
+•// int sem_unlink(const char *name); situata in (<semaphore.h>).  Un semaforo con nome è rimosso dal sistema con la funzione.  (Il nome del semaforo può essere rimosso dal filesystem mentre il suo contatore è maggiore di zero). La sua rimozione effettiva, però, non avviene fino a che non si verifica la sem_close().
+
+Persistenza degli oggetti
+• La persistenza di un oggetto di un qualsiasi tipo di IPC è definita come la quantità di tempo in cui l’oggetto di quel tipo esiste:
+	- Persistenza di processo: l’oggetto esiste fino a che l’ultimo processo che mantiene l’oggetto aperto lo chiude (pipe e FIFO)
+	- Persistenza a livello kernel: l’oggetto esiste fino al reboot o fino a che l’oggetto è cancellato esplicitamente (semafori SV). I semafori Posix e la memoria condivisa Posix devono essere persistenti almeno al livello kernel, ma possono anche essere persistenti a livello di file system, a seconda dell’implementazione
+	- Persistenza a livello di file system: l’oggetto esiste fino a che esso è esplicitamente cancellato con unlink. L’oggetto mantiene il proprio valore anche se il kernel effettua un reboot (semafori e memoria condivisa Posix possono avere tale proprietà)
+	- Per i semafori con nome, processi differenti possono sempre far riferimento allo stesso semaforo facendo si che ogni chiamata a sem_open() specifichi lo stesso nome
+
+•// int getopt(int argc, char *const argv[], const char *optstring); situata in (<unistd.h>). Effettua il parsing incrementale degli argomenti da riga di comando (argv) e restituisce il carattere d’opzione noto successivo. L’opzione è nota se è stata specificata nella stringa dei caratteri d’opzione accettati, optstring. In optstring, se un carattere è seguito dai due punti (:), l’opzione richiede un argomento. La variabile optind è l’indice del successivo elemento di argv[] da elaborare. Inizializzato ad 1 dal sistema ed aggiornato da getopt(). in pratica la funzione getopt() restituisce il prossimo carattere d’opzione (se trovato) da argv che corrisponde ad un carattere in optstring. Se l’opzione richiede un argomento, getopt() imposterà optarg in modo da puntare all’argomento opzione.
+
+
+SEMAFORI BASATI SU MEMORIA
+• Posix fornisce anche i semafori basati su memoria in cui l’applicazione alloca la memoria per il semaforo che successivamente il sistema provvede ad inizializzare.
+
+•// int sem_init(sem_t *sem, int shared, unsigned int value); situata in (<semaphore.h>). Inizializza un semaforo basato su memoria. L’argomento
+sem punta ad una variabile sem_t che l’applicazione deve allocare. Se shared è 0, allora il semaforo è condiviso tra i thread del processo, altrimenti il semaforo è condiviso tra processi, viceversa quando shared è diverso da 0, il semaforo deve essere memorizzato in qualche tipo di memoria condivisa che è accessibile a tutti i processi che useranno il semaforo.
+
+•// int sem_destroy(sem_t *sem); situata in (<semaphore.h>). Una volta finito, il semaforo è deallocato con sem_destroy()
+
+• Le regole per condividere semafori basati su memoria sono semplici: il semaforo stesso (il tipo sem_t) risiede in un’area di memoria che deve essere condivisa da tutti i processi che vogliono condividere il semaforo, ed il secondo argomento di sem_init() deve essere 1. hanno persistenza di processo, ma la reale persistenza dipende dal tipo di memoria in cui il semaforo è memorizzato:
+	- Se il semaforo di memoria è condiviso tra thread di un processo singolo (l’argomento shared di sem_init() è 0), allora il semaforo ha persistenza di processo e scompare quando il processo termina
+	- Se invece è condiviso tra processi differenti (shared vale 1 in sem_init()), allora il semaforo deve essere memorizzato in memoria condivisa e resta disponibile fino a che la porzione di memoria condivisa rimane disponibile
+
+
+SHELL SCRIPT
+• Lo scripting Shell consiste nella scrittura di script (file testuali contenenti un insieme di istruzioni) eseguibili in ambiente Shell. Esegue compiti, più o meno complessi, sulla base della combinazione dei comandi tipici offerti dal sistema operativo. (Il permesso di esecuzione deve essere abilitato in moda da poter essere eseguiti dal sistema operativo)) Nei sistemi GNU/Linux è possibile “programmare la shell”, cioè creare dei programmi per eseguire automaticamente delle operazioni che altrimenti si dovrebbero eseguire manualmente. Tali programmi sono noti a tutti come script della shell
+• Tutti i file di script hanno estensione “.sh” e vengono creati con un qualsiasi editor. Una volta redatto lo script, per renderlo eseguibile occorre impostare i permessi di esecuzione mediante il comando chmod. Ad esempio, supponendo di aver scritto uno script chiamato prova.sh, i permessi di esecuzione si impostano aggiungendo la possibilità di eseguirlo, da parte dell’utente corrente, nel seguente modo:
+chmod +x prova.sh, si potrà poi procedere ad eseguire lo script con il comando: ./prova.sh
+•Uno script della shell può contenere
+	- righe di commento (identificate da #)
+	- una prima riga di commento speciale che indica quale shell utilizzare per interpretare lo script
+	- comuni comandi Linux
+Quando un file di script viene mandato in esecuzione, la shell legge tale file riga per riga ed esegue tutte le istruzioni che incontra: interpretazione dei comandi
+	- Tutte le righe che iniziano con il carattere cancelletto ‘#’ sono ignorate dalla shell	
+	- La prima riga però ha una funzione precisa: indicare il tipo di shell che potrà eseguire lo script ed eventualmente il path per richiamare tale shell
+		Es. #!/bin/bash
+	Nel caso questa prima riga di commento fosse omessa sarebbe invocata la shell di default, cioè la shell BASH
+
+• Un esempio di variabili built-in predefinite nella shell è:
+	- # 		il numero di argomenti dati allo script o ad una funzione
+	- ? 		exit status del comando precedente (0 = ok, >0 errore)
+	- $ 		Process ID del processo di shell
+	- ! 		Process ID dell’ultimo comando eseguito in background
+	- 0 		Nome della shell o dello script di shell
+	- BASH 		il completo pathname utilizzato per invocare la bash
+	- BASH_VERSION 	la versione dell’istanza della bash utilizzata
+	- USER 		nome dell’utente corrente
+	- HOME 		nome della directory home dell’utente corrente
+
+• Comadi:
+	- '#' 			commento
+	- 'echo'"stringa" 	stampa
+	- 'read' 		prende in input
+	- "std" '>&' "std"	cambia gli standard
+	- 'jobs' "-l" 		visualizza i pid background
+	- 'sleep' "sec"		fa la sleep
+	- 'kill' "pid"		ferma il processo 
+	- 'fg' "pid"		mette il processo in forexground
+	- 'bg' "pid" 		mette il processo in background
+	- "process" '&' 	esegue il programma in background
+	- 'CTRL+Z' 		termina temporaneamente il processo
+	- 'CTRL+C' 		arresta il processo
+	- 'more' "_" 		legge in input file date e le stampa in modo formattato 
+	- 'less' "_"		legge in input file date e le stampa in modo formattato e permette di scorrere 
+	- 'wc' "-w/c/l" "_"	conta parole/caratteri/linee del file
+	- 'head' "-N" "_"	mostra le prima 10 o N linee di un file
+	- 'tail' "-N" "_"	mostra le ultime 10 o N linee di un file
+	- 'lpr' "_"		per stampare un file molto grande
+	- 'expr' 		expr consente l’esecuzione di comandi aritmetici
+
+• Variabili built-in
+	- $HOME		Home directory dell’utente corrente
+	- $PATH		Lista di directory separate dai due punti (:) per la ricerca di comandi
+	- $PS1		Prompt dei comandi. E’ possibile usare valori più complessi.Ad esempio, [\u@\h \W] è il default per indicare utente, nome della 				macchina, directory corrente e $
+	- $PS2		Prompt dei comandi secondario. Usato quando è necessario fornire input aggiuntivi. Solitamente è il simbolo >
+	- $IFS		Separatore campi di input 
+	- $0		Nome dello script
+	- $#		Numero di parametri passato
+	- $$		PID del processo dello script
+	- $1,$2..	Parametri forniti allo script
+	- $*		Lista di tutti i parametri, mostrata in una singola variabile, separati dal primo carattere della variabile di ambiente IFS (spazio, tab, …)
+	- $@		Sottile variante di $* che non usa il separatore IFS
+
+•Costrutti condizione built-in 
+if/case [condizione] then ... [codice]. I costrutti di condizione e confronto possono essere:
+	stringa1 = stringa2 			Vero se le  stringhe sono uguali 
+	stringa1 != stringa2			Vero se le stringhe non sono uguali
+	-n stringa				Vero se la stringa non è nulla
+	-z stringa				Vero se la stringa è nulla (stringa vuota)
+	espressione1 –eq espressione2 		Vero se le  espressioni sono uguali 
+	espressione1 –ne espressione2		Vero se le espressioni non sono uguali
+	espressione1 –gt espressione2		Vero se espressione1 è maggiore di espressione2
+	espressione1 –ge espressione2		Vero se espressione1 è maggiore o uguale di espressione2
+	espressione1 –lt espressione2		Vero se espressione1 è minore di espressione2
+	espressione1 –le espressione2		Vero se espressione1 è minore o uguale di espressione2
+	!espressione				Vero se espressione è falsa
+	-d file					Vero se il file è una directory 
+	-e file					Vero se il file esiste
+	-f file					Vero se il file è regolare
+	-g file					Vero se set-group-id è 1 per file
+	-r file					Vero se il file è leggibile
+	-s file					Vero se il file ha una dimensione non zero
+	-u file					Vero se set-user-id è 1 per file
+	-w file					Vero se il file è scrivibile
+	-x file					Vero se il file è eseguibile
+
+• Costrutti condizionali e ciclici
+	- if[cnd]then...else...
+	- case [var] in pattern [cnd1].. pattern [cnd2]... pattern[cnd3] esac
+	- while [cnd] do... done
+	- for [var] in [cnd] do... done
+	- nome_function([par]) {...}
+•
+•
+•
+•
+•

@@ -1,0 +1,12 @@
+Fa eseguire una sola volta una funzione da un solo thread di un certo numero di thread ivocanti la stessa
+
+Assicura che una routine di inizializzazione sarà eseguita solo una volta senza curarsi di quanti thread nel processo la invocano
+• Tutti i thread chiamano la routine facendo identiche chiamate alla funzione pthread_once. Il thread che per primo chiama la funzione pthread_once può eseguirla; le chiamate seguenti non eseguono la funzione.
+
+•// pthread_once_t initflag = PTHREAD_ONCE_INIT;  -> la variabile globale
+
+int pthread_once(pthread_once_t *initflag, void (*init_routine) (void)); /* restituisce 0 se OK, numero di errore se fallisce */
+
+• initflag deve essere una variabile non locale ed inizializzata a PTHREAD_ONCE_INIT
+• pthread_once garantisce che la funzione di inizializzazione è chiamata una ed una sola volta
+• initflag è utilizzata per determinare se la funzione è stata chiamata in precedenza

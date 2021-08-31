@@ -1,0 +1,69 @@
+n processo padre crea N (N numero pari) processi figli. 
+Ciascun processo figlio Pi e' identificato da una variabile intera i (i=0,1,2,3...,N-1). 
+E’ necessario gestire due casi, sulla base di un argomento da riga di comando:
+    Se argv[1] è uguale ad 'a' ogni processo figlio Pi, con i pari, manda un segnale (SIGUSR1) al processo Pi+1;
+    Se argv[1] è uguale a 'b' ogni processo figlio Pi con i < N/2 manda un segnale (SIGUSR1) al processo Pi + N/2;
+
+
+Viene dato in input un numero N e il comando ('a' o 'b')
+Risolvo facendo un array di pid dei processi.
+Utilizzo la pipe per la sincronizzazione.
+
+Nella parte del padre:
+Faccio gestire il segnale tramite signal(SIGUSR1,handler) dalla funzione handler
+Crea una pipe come file descritptor fd tramite pipe(fd).
+Il ciclo for esegue le fork per N processi
+
+for(i=0;i<N;i++){
+    pid[i]=fork();
+    if(pid[i]==0){
+        close(fd[1]); //chiudo descrittore che non mi serve -> faccio solo read
+        body_proc(i);
+        close(fd[0]); // una volta finito la read
+        exit(0);
+    }
+}
+
+quando il processo si attiva nel ciclo esegue delle operazioni:
+chiude il latto scrittura (output) della pipe
+ed esegue determinate operazioni:
+    se il commando è 'a' 
+        se è un processo con id pari
+            esegue una read(fd[0],pid,sizeof(pid)); e blocca il processo fin quando qualcuno non scrive. 
+            una volta sbloccato esegue una kill(pid[i+1],SIGUSR1) per inviare il segnale al processo con id+1
+        altrimetni se è un processo con id dispari 
+            deve stare in pause() aspettando il segnale SIGUSR1
+        }
+    altrimenti se il commando è 'a' 
+        se è un processo ha un id < N/2
+            esegue una read(fd[0],pid,sizeof(pid)); e blocca il processo fin quando qualcuno non scrive. 
+            una volta sbloccato esegue una kill(pid[i+N/2],SIGUSR1) per inviare il segnale al processo con id+N/2
+        altrimetni se è un processo con id >= N/2
+            deve stare in pause() aspettando il segnale SIGUSR1
+        }
+alla fine ritorna.
+chiude il latto lettura (input) della pipe
+
+Il controllo quando ritorna al padre praticamente provvede ad attivare tutti quei processi bloccati dalla read della pipe per poterli far eseguire:
+
+close(fd[0]); // chiudo il descrittore file inutilizzato -> faccio solo write
+for (i=0; i<N;i++){
+    write(fd[1],pid,sizeof(pid));
+}
+close(fd[1]); //chiudo una volta finito
+
+E poi termina l'esecuzione.
+
+Viene fatto ciò per agevolare la sincronizzazione: 
+i processi non puossono inviare un messaggio fin quando i riceventi non si sono, allora si bloccano nella read della pipe.
+poichè i processi ricevitori stanno ad aspettare
+
+quindi si ha che:
+i ricevitori aspettano il segnale
+i segnalatori aspettano che ci siano i relativi ricevitori
+
+il padre successivamente provvederà a sbloccare i processi segnalatori inviandogli tramite la send tutti gli effettivi i pid dei processi (praticamente gli invia il l'array dei pid[N] di tutti i processi completo). 
+In questo modo quando andranno ad inviare tramite la kill sia  kill(pid[i+1],SIGUSR1)  che  kill(pid[i+N/2],SIGUSR1) andranno a buon fine perchè il padre gli ha inviato i pid[] tale che i pid[i+1] e pid[i+N/2] non siano vuoti o non ancora calcolati (prima delle loro fork).
+
+
+

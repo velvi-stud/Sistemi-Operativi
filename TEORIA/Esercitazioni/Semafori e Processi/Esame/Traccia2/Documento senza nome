@@ -1,0 +1,88 @@
+
+Const N: …
+Var:
+buffer[N]:int 
+indice_globale:int
+attiva_processo: sem(0) // semaforo per  attivare un determinato processo
+mutex1:sem(1) // semaforo per la mutua esclusione
+contatore_processi: int (0) // un contatore dei processi inizializzato a 0
+J: int  // indice per il ciclo for di stampa
+mutex2:sem(1);
+mutex3:sem(1);
+mutex4: sem (1);
+mutex5:sem(1);
+ultimo_processo: sem(0);
+attiva_coordinatore:sem(0);
+SC:sem(1)
+
+Processo coordinatore
+Begin
+  Parbegin
+    Repeat
+
+    While(contatore_processi  != N)
+        Wait(mutex1);
+        Indice_globale=rand(1..N);
+        Signal(mutex1);
+        Signal(attiva_processo)
+    End while ; 
+
+    // quando il coordinatore esce dal ciclo while vuol dire che il buffer è stato scritto da N pid per cui è pieno
+
+    //attraverso questo ciclo for determino la parità dell’indice , se pari è il turno del processo coordinatore, altrimenti è il turno dell’ultimo processo che è in attesa di essere attivato dal coordinatore
+
+    Wait(mutex4)
+    For j to N 
+        If j == 0
+            { LEGGI E STAMPA IL PID DEL BUFFER[J] }
+        Elseif  (j%2==0)      // resto=0 INDICE PARI
+            { LEGGI E STAMPA IL PID DEL BUFFER[J] }
+        Else  // indice dispari
+        Signal(ultimo_processo); // attivo l’ultimo processo
+        wait(attiva_coordinatore); // e attendo che mi riattivi
+        end if;
+    End for;
+    Signal (mutex4)
+
+    Forever
+  Parend
+End;
+
+
+
+
+Processo Pj… con j= (1…2*n)
+Begin
+    I : int // indice i per il ciclo for
+    Parbegin
+    Repeat
+        Wait(attiva_processo);
+        // effettuo una ricerca al fine di determinare se il processo Pj abbia già il proprio pid nell‘array e lo faccio in sezione critica cosi che nessun altro processo durante questo check possa accedere al controllo if alterano cosi il valore di getpid
+        Wait (Sc)
+        For i = 0 to N 
+            If (buffer[i]==getpid()) 
+                // ho gia scritto nell’i-esima posizione il mio pid 
+                break(); // esco dal ciclo for
+            Else 
+                // sono sicuro che in nessuna posizione è presente il mio pid per cui posso inserirlo
+        Wait(mutex2);
+        Buffer[indice_globale]=getpid()  
+        Contatore_processi++; // incremento la varibile globale che tiene conto di quanti pid sono stati inseriti 
+        Signal(mutex2);
+        end for;
+        signal (SC)
+
+        wait(mutex3)
+        //controllo oltre al contatore anche il pid nell’ultima posizione cosicché possa assicurarmi che eventuali prelazioni e nuove schedulazioni di processi Pj  non facciano entrare in tale sezione critica un processo che non è ultimo.
+        if (contatore_processi == N  and getpid()==buffer[indice_globale]) // vuol dire che il processo Pj è l’ultimo selezionato
+        wait(ultimo_processo) // attendo che il coordinatore mi attivi
+        wait(mutex5)
+        { LEGGI E STAMPA IL PID DEL BUFFER[J] } 
+        signal (mutex5)
+        signal(attiva_coordinatore); // attivo il coordinatore per ciclare l’indice
+        end if; 
+        signal(mutex3)
+    Forever
+Parend
+End;
+

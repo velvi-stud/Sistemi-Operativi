@@ -1,0 +1,53 @@
+
+//cambiare_permessi___________________________________________
+
+$ chmod 755 file
+$ ls –l file
+-rwxr-xr-x 1 staiano
+$ chmod g+w file
+$ ls –l file
+-rwxrwxr-x 1 staiano
+$ chmod go-rx file
+$ ls –l file
+-rwx-w---- 1 staiano
+$ chmod a=r file
+$ ls –l file
+-r--r--r-- 1 staiano
+__________________________________________________________________
+
+
+
+//cambiare_proprietario___________________________________________
+
+$ ls –l filetest
+-rw-rw-r-- 1 staiano staiano        0 Jan 12:19 filetest
+$ chown root filetest
+Chown: filetest: Operation not permitted
+
+$ su root
+Password:
+# ls –l filetest
+-rw-rw-r-- 1 staiano staiano        0 Jan 12:19 filetest
+# chown root filetest
+# ls –l filetest
+-rw-rw-r-- 1 root staiano       0 Jan 12:19 filetest
+# chown root:root filetest
+# ls –l filetest
+-rw-rw-r-- 1 root root      0 Jan 12:19 filetest
+__________________________________________________________________
+
+
+chmod [opzione..] XYZ nome_file
+X: indica gli utenti nei confronti dei quali si vuole modificare l’accesso
+    a:tutti gli utenti
+    g: tutti gli utenti del certo gruppo
+    u: l’utente stesso(da user)
+    o: tutti gli altri utenti
+Y: indica che azione si vuole compiere
+    +:attivare
+    - :togliere
+Z: indica che tipo di permessi si vuole modificare
+    r: lettura
+    w:scrittura
+    x:esecuzione (da execute)
+

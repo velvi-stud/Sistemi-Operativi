@@ -1,0 +1,93 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <semaphore.h>
+
+/*
+ Scrivere un programma in C e Posix sotto Linux che, preso un argomento intero positivo da riga di
+	 comando, gestisca la seguente situazione:
+	 genera due figli A e B e
+	 - se l'argomento è PARI invia un segnale SIGUSR1 alla ricezione del quale il figlio A calcola il cubo del
+	 numero passato come argomento da linea di comando, mentre il figlio B stampa un messaggio di
+	 arrivederci e termina.
+	 - se l'argomento è DISPARI invia un segnale SIGUSR2 alla ricezione del quale il figlio B calcola il
+	 reciproco del numero passato come argomento, attende per un numero di secondi pari al doppio del
+	 numero passato come argomento ed invia un segnale SIGUSR1 al processo A dopodiché termina
+	 l'esecuzione. Il figlio A, invece, attende la ricezione del segnale SIGUSR1, stampa un messaggio e
+	 termina.
+*/
+
+int f1,f2,x;
+
+void A_handlerSIG_Pari(int sign){
+   printf("Sono A e calcolo il cubo del numero : %d\n",x*x*x);    
+}
+
+void B_handlerSIG_Pari(int sign){
+   printf("Sono B. Arrivederci.\n");
+}
+
+void A_handlerSIG_Dispari(int sign){
+   printf("dio cane!\n");
+   exit(0);
+}
+            
+
+void B_handlerSIG_Dispari(int sign){
+   printf("Sono B. Reciproco di %d : 1/%d\n",x,x);
+   sleep(2*x);
+   kill(f1,SIGUSR1);
+   exit(0);
+}
+
+int main(int argc, char *argv[]){
+   //int f1,f2;
+   x=atoi(argv[1]);
+
+   f1=fork();
+      if(f1==0){
+         if(x%2==0){
+            printf("Sono figlio A \n");
+            signal(SIGUSR1,A_handlerSIG_Pari);
+            pause(); //Pause serve per attendere il segnale
+         }else{
+            signal(SIGUSR1,A_handlerSIG_Dispari);
+            pause();
+         }   
+   }else{
+      f2=fork();
+      if(f2==0){
+         if(x%2==0){
+            printf("Sono figlio B \n");
+            signal(SIGUSR1,B_handlerSIG_Pari);
+            pause();
+            exit(1);
+         }else{
+            signal(SIGUSR2,B_handlerSIG_Dispari);
+            pause();
+         }
+      }else{
+         if(x%2==0){
+           sleep(3);
+           printf("Sono il padre.Numero pari.\n");
+           kill(f2,SIGUSR1);
+           waitpid(f2,NULL,0);  
+           kill(f1,SIGUSR1);
+           waitpid(f1,NULL,0);   
+         }else{
+           sleep(3);
+           printf("Sono il padre.Numero dispari.\n");
+           kill(f2,SIGUSR2);
+           waitpid(f1,NULL,0);   
+           waitpid(f2,NULL,0);   
+         
+         }
+    }
+}
+   exit(0);
+
+}

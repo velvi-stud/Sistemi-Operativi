@@ -1,0 +1,37 @@
+L'USO DELLE VARABILI DI CONDIZIONE-
+
+Thread principare:
+    dichiare inizializza dati/variabili globali che richiesdono sincronizzazione
+    dichiare inizializza variabile di condizione
+    dichiare inizializza mutex associativo
+    crea thread A e thread B
+
+Thread A: (process_msg)
+    esegue fino al punto in cui una certa condizione deve verificarsi
+    blocca il mutex associato 
+        e controlla il valore di una variabile globale
+    chiama  pthread_cond_wait() per effettuare una wait bloccante in attesa del risveglio da parte del thread B
+        ovviamete poichè sono associati entrambi con il mutex, la pthread_cond_wait() implica anche lo sblocco del relativo per far partire il processo B.
+    quando risvegliato il thread A, blocca il mutex in modo automatico
+    esegue le operazione
+    sblocca il mutex
+    continua
+
+Thread B: (enqueue_msg)
+    esegue
+    blocca il mutex associato 
+        e modifica il valore della variabile globale che il thread A era in attesa
+    controlla il valore della variabile di attesa del thread A
+        se si verifica la condizione desiderata risveglia il thread A con la pthread_cond_signal()
+    sbloccca il mutex
+    continua
+
+
+La condizione è lo stato di una coda di lavoro
+Proteggiamo la condizione con un mutex e valutiamo la condizione in un ciclo while
+Quando poniamo un messaggio sulla coda di lavoro, manteniamo il mutex bloccato che, 
+    però, non è necessario mantenere bloccato quando segnaliamo ai thread in attesa
+
+
+
+

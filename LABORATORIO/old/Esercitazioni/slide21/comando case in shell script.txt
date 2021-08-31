@@ -1,0 +1,11 @@
+#!/bin/bash
+echo “Supererete la prova intercorso? Prego rispondere si o no”
+read esito
+case “$esito” in
+si) echo “Bene, sosterrete anche la prossima”;;
+no) echo “Non disperate, ci vedremo al prossimo appello”;;
+s) echo “Bene, sosterrete anche la prossima”;;
+n) echo “Non disperate, ci vedremo al prossimo appello”;;
+*) echo “Spiacente, risposta non riconosciuta”;; 
+esac
+exit 0

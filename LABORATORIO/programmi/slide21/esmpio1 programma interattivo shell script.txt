@@ -1,0 +1,22 @@
+#!/bin/bash
+# lo script inizia con la definizione della funzione
+si_o_no() {
+echo “$* è il tuo nome?” 
+while true
+do
+echo –n “Immetti si o no: “ 
+read x
+case “$x” in
+s | si) return 0;; 
+n | no) return 1;;
+*)	echo “Inserisci si o no” esac
+done
+}
+# inizia la parte principale del programma 
+echo “I parametri originali sono $*”
+if si_o_no “$1” then
+echo “Ciao $1, bel nome” 
+else
+echo “a buon rendere, ciao” 
+fi
+exit 0

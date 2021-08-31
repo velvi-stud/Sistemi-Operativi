@@ -1,0 +1,5 @@
+Creare un link simbolico con il comando ln -s. 
+Scrivere un programma che selezioni il link nella directory data in input
+e stampi a video il nome del file.
+per fare ciò si deve per la stat effettuare tutto come directory corrente.
+

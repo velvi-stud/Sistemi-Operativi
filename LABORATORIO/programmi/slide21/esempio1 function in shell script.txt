@@ -1,0 +1,8 @@
+#!/bin/bash 
+foo() {
+echo “La funzione foo è in esecuzione”
+}
+echo “inizio script”
+foo
+echo “fine script” 
+exit 0

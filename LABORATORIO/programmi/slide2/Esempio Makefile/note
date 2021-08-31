@@ -1,0 +1,4 @@
+nella shell basta solo:
+make
+il file .out sarà nominato prog
+./prog *parola da fare il reverse*

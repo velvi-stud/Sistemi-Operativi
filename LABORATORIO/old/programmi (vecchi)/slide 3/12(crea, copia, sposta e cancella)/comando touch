@@ -1,0 +1,12 @@
+touch newfile
+touch otherfile
+cp newfile Altro
+mv otherfile Altro
+ 
+touch -> creare un file se non esiste
+cp -> copia in un altra directory
+mv -> muove il file in un'altra directory
+rm -> cancella file
+
+
+

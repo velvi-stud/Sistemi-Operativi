@@ -1,0 +1,6 @@
+#include <stdio.h> 
+int main (void) {
+printf(“Sono il processo %d, eseguo una ls -l\n",getpid()); 
+execl("/bin/ls", "ls", "-l", NULL); /* Esegue ls -l */ 
+printf(“Questa riga non dovrebbe essere eseguita\n");
+}

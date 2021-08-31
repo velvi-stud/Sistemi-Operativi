@@ -1,0 +1,21 @@
+forno: signal: 0
+mutex: signal: 1
+pizza: int: 0
+
+process_cuoco(){
+
+int work = rand(0..1); // 0 -> inforna, 1 -> sforna
+
+
+wait(mutex);
+if (work==0 && pizza<9)
+    // inforna
+    pizza++;
+    signal(forno);
+else
+    // sforna
+    wait(forno);
+    pizza--;
+signal(mutex);
+
+}

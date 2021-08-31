@@ -1,0 +1,26 @@
+//Creare un link simbolico con il comando ln -s. Scrivere un programma che selezioni il link nella directory e stampi a video il nome del file.
+#include <sys/types.h> 
+#include <sys/stat.h> 
+#include <fcntl.h> 
+#include <unistd.h> 
+#include <dirent.h> int main()
+{
+char c, 
+cwd[100]; 
+int fd;
+struct stat buf; 
+struct dirent	*drn; 
+DIR	*dp;
+getcwd(cwd,sizeof(cwd));
+if((dp=opendir(cwd))==NULL){	//'carica' la struttura associata alla directory printf("opendir error\n");
+exit(-1);
+}
+while((drn=readdir(dp))!=NULL){	//legge il contenuto della dir 
+if(lstat(drn->d_name,&buf) <0)
+printf("Errore lstat su %s\n",drn->d_name); 
+if(S_ISLNK(buf.st_mode))
+printf("Trovato il link %s\n",drn->d_name);
+}
+closedir(dp);
+ exit(0);
+}

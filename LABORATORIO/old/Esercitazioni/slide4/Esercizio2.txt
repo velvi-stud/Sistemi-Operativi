@@ -1,0 +1,1 @@
+//Modificare l'esercizio 1 in modo che prenda l'input dal file “testfile” e scriva l'output nel file “outputfile”

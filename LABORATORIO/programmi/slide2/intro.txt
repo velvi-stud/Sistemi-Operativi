@@ -1,0 +1,1 @@
+struttura a moduli dei file con function .h e eseguite tramite la makefile

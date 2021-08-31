@@ -1,0 +1,2 @@
+inserire il file da cui attingere l'input quando si chiama l'exe
+

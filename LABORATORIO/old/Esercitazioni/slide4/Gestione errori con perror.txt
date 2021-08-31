@@ -1,0 +1,24 @@
+#include <stdio.h> 
+#include <fcntl.h> 
+#include <errno.h> 
+int main(void) { 
+int fd;
+/* Apre un file inesistente per causare un errore */ 
+fd = open ("nonexist.txt", O_RDONLY);
+if (fd == -1) { /* fd=-1 => si è verificato un errore */ 
+printf ("errno = %d\n", errno);
+perror ("main");
+}
+fd = open ("/", O_WRONLY); /* Forza un errore diverso */ 
+if (fd == -1) {
+printf ("errno = %d\n", errno); 
+perror ("main");
+}
+/* Esegue una system call con successo */
+fd = open ("nonexist.txt", O_WRONLY | O_CREAT, 0644); 
+printf("errno = %d\n", errno);
+/* Visualizza dopo la chiamata */
+perror ("main");
+errno = 0; /* Reset manuale variabile di errore */
+return 0;
+}
