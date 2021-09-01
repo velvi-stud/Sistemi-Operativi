@@ -1,9 +1,0 @@
-# Makefile per usaPal, versione 1 
-usaPal : usaPal.o palindroma.o reverse.o 
-	gcc usaPal.o palindroma.o reverse.o -o usaPal 
-usaPal.o : usaPal.c palindroma.h 
-	gcc -c  usaPal.c 
-palindroma.o : palindroma.c palindroma.h reverse.h 
-	gcc -c palindroma.c 
-reverse.o : reverse.c reverse.h 
-	gcc -c reverse.c

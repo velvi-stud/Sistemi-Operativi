@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [ -f /bin/bash ] then
-echo “il file /bin/bash esiste” fi
-
-if [ -d /bin/bash ] then
-echo “/bin/bash è una directory” else
-echo “/bin/bash non è una directory” fi

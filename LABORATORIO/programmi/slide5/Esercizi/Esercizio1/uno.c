@@ -25,7 +25,8 @@ while (1){
        return 2;
     }
     printf("\nnome: %s", elem->d_name);
-    if(lstat(elem->d_name, &info)<0){ // se ci fosse stato solo la function stat si riferica al file puntato dal link e non al link vero e proprio
+    if(lstat(elem->d_name, &info)<0){ 
+    // se ci fosse stato solo la function stat si riferica al file puntato dal link e non al link vero e proprio
         perror("\nstat file error");
         continue;
     }
@@ -35,5 +36,5 @@ while (1){
     else
         printf("  %d\n",info.st_mode);
 }
-return 4;
+return 0;    
 }

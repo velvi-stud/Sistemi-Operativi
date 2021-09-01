@@ -1,6 +1,0 @@
-totale 4
-926083 -rw-rw-r-- 1 aulainfo aulainfo 210 mar 23 15:55 comandi
-925081 -rw-r--r-- 2 aulainfo aulainfo   0 mar 23 15:55 file-hard
-926093 lrwxrwxrwx 1 aulainfo aulainfo   7 mar 23 15:56 file-soft -> newfile
-925081 -rw-r--r-- 2 aulainfo aulainfo   0 mar 23 15:55 newfile
-926135 -rw-r--r-- 1 aulainfo aulainfo   0 mar 23 15:57 resoult
