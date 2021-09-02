@@ -1,0 +1,5 @@
+In un sistema sono attivi N processi dotati di un credito C. 
+Ogni processo genera un numero casuale P in [1..C] e verifica se il proprio P è maggiore di quello degli altri processi (a parità di P vince il processo con PID minore). 
+Il processo vincitore (quello con P maggiore) aggiunge al proprio credito C le quantità P generate da tutti gli altri
+processi che invece sottragono al proprio credito C la quantità P generata. Un processo con credito C=0 termina.
+Discutere la soluzione proposta in termini di possibili situazioni di starvation/deadlock e, nel caso, si propongano soluzioni ammissibili.

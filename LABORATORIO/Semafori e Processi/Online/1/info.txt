@@ -1,0 +1,3 @@
+A Laundromat has 30 washing machines and 15 dryers. 
+Assuming that all customers use one washing machine to wash their clothes then one dryer to dry them.
+

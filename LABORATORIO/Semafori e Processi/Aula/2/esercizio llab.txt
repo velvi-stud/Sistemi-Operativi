@@ -1,0 +1,51 @@
+DEFINE N 10
+DEFINE K 7
+DEFINE M 60
+
+arrA: array bool: K
+semB: signal: N-K
+semC: signal: 1
+mutex: signal: 1
+pA: int: 0
+
+
+process_A(){
+    begin
+        wait(semC);
+        
+        if(pA<K){
+            pA++;
+        }else{
+            signal(semC);
+            exit();
+        }
+        signal(semC);
+        
+        // fa cose
+        
+        wait(mutex);
+        pA--;
+        signal(mutex);
+        
+        exit();
+    end
+}
+
+process_B(){
+    begin
+        wait(semC);
+        // aspetto che il controllore si liberi.
+        // controllando un processo a volta
+        signal(semC);
+        
+        wait(semB);
+        alarm(M*60);
+        // fa cose
+        signal(semB);
+        
+        exit();
+    end
+}
+
+
+

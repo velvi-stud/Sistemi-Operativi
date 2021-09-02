@@ -1,0 +1,6 @@
+2 insiemi di processi che a turno votano 
+	al turno del primo insieme di processi, ogni processo vota uno dei processi del secondo insieme.
+ 		una volta che hanno votato tutti:
+		l'ultimo processo che vota produce e calcola automaticamente il processo del secondo cluster che ha vinto e lo sveglia 
+	quando si sveglia questo consuma e sveglia tutti gli altri processi del secondo insieme che devono votare per il primo insieme
+all'infinito
