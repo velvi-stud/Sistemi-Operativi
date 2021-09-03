@@ -1,0 +1,4 @@
+Modificare l'esercizio 1 in modo che prenda l'input dal file “testfile” e scriva l'output nel file “outputfile”
+
+1) fai le open ed esegui quelli dei rispettivi descrittori
+2) fai la open e cambi 0 e 1 con la dup2 e rimani il codice di prima.

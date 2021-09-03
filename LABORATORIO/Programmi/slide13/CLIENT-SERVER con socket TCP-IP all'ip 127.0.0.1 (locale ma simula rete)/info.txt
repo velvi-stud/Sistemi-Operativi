@@ -1,0 +1,5 @@
+Per avviare la comunicazione avviare prima il server
+poi il client
+
+oppure avviando il server, inserire un carattere e basta
+

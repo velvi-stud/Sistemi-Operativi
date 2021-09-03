@@ -1,0 +1,9 @@
+il programma "uno" esegue 2 fork con 2 diverse exec chiamanti il programma "due" che stampa gli argomenti passati e la variabile d'ambiente facendo:
+extern char **environ;
+for (ptr = environ; *ptr !=0; ptr++) /* echo stringhe di env */ 
+printf("%s\n", *ptr);
+
+la prima fork del programma "uno": usa una -// int execle (const char *path, const char *arg0, ... /* (char *)0, char *const envp[] */ ) che prende in input: la posizione dell'eseguibile e delle variabili di ambiente da passare al programma come argv[0], argv[1], … , argv[n] terminati con NULL, inoltre prende in input le variabili d'ambiente con: char *env_init[]={"USER=sconosciuto", "PATH=/tmp", NULL}. Il risultato è  execle("/home/aulainfo/Scrivania/SISTEMI OPERATIVI/LABORATORIO/programmi (nuovi)/slide6-7/Esempio processi con execvv/due", "esempio uno con execle", "exec -> LE", "altro arg a caso", NULL, env_init).
+
+la seconda fork del programma "uno": usa una -// int execlp (const char *path, const char *arg0, ... /* (char *)0, char *const envp[] */ ) che prende in input: la posizione dell'eseguibile e delle variabili di ambiente da passare al programma come argv[0], argv[1], … , argv[n] terminati con NULL LA variabile d'ambiente è quella di $PATH di linux di default. Il risultato è  execlp("/home/aulainfo/Scrivania/SISTEMI OPERATIVI/LABORATORIO/programmi (nuovi)/slide6-7/Esempio processi con execvv/due","esempio due con exexlp","con exec -> LP", NULL).
+

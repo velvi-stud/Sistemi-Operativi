@@ -1,1 +1,0 @@
-eseguirà prima il main fino al return, poi a seconda dell'ordine chiamate atexit farà tale cosa alla fine

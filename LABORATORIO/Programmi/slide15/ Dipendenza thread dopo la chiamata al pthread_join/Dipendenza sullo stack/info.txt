@@ -1,0 +1,12 @@
+Osserviamo come lo stack del secondo thread (tid2) ha sovrascritto lo stack del primo thread. 
+Per risolvere questo problema è possibile usare una struttura globale o allocare la struttura usando malloc.
+
+PROVA DELLA DIPENDENZA DEI THREAD NELLO SPAZIO DI INDIRIZZAMENTO 
+ESSENDO LA MEMORIA CONDIVISA
+
+il thread 1, creato e inizializzato, modifica la struct
+il thread 2, creato e inizializzato, fa le sue cose, ma modifica lo spazio dello stack, poichè tramite la pthread_join riutilizza lo stack del thread 1
+
+per risolvere questo, basta cambiare lo spazio ove memorizzata la variabile, mettendola globale.
+nel main -> usa lo stack
+globale -> usa l'heap 

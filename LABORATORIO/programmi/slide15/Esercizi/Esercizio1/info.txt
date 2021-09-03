@@ -1,5 +1,0 @@
-Scrivere un programma che accetta un intero N da riga di comando, 
-Crea N thread e poi aspetta la loro terminazione
-Ciascun thread aspetta un numero di secondi casualetra 1 e 10, 
-    poi incrementa una variabile globale intera
-    ed infine ne stampa il valore

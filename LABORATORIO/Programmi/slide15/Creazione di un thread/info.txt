@@ -1,0 +1,10 @@
+Il programma crea un thread e stampa gli ID del processo, del nuovo thread e del thread iniziale
+
+Nell’esempio ha due particolarità necessarie per gestire le race condition tra il thread principale e il nuovo thread 
+    1. Necessità di invocare una sleep nel thread principale
+        • Senza la sleep il thread principale potrebbe uscire, terminando l’intero processo prima che il nuovo thread abbia la possibilità di iniziare l’esecuzione
+        • Questo comportamento dipende dall’implementazione dei thread del sistema operativo e dagli algoritmi di scheduling
+    2. Il nuovo thread ottiene il suo ID chiamando pthread_self invece di leggerlo dalla memoria condivisa o riceverlo come argomento alla sua routine di inizio
+        • Ricordiamo che pthread_create restituirà l’ID del nuovo thread attraverso il primo parametro (tidp)
+        • Nell’esempio, il thread principale memorizza questo in ntid, ma il nuovo thread non può usarlo in maniera sicura
+        • Se il nuovo thread viene eseguito prima che il thread principale ritorni dalla chiamata a pthread_create, allora il nuovo thread vedrà il contenuto non inizializzato di ntid invece dell’ID del thread

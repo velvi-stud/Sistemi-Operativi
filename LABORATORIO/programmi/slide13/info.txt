@@ -1,2 +1,0 @@
-PIPE CON NOME -> SOCKET
-

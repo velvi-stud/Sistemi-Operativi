@@ -1,2 +1,0 @@
-Creare un link simbolico con il comando ln -s. 
-Scrivere un programma che stampa in output il nome del link simbolico presente nella directory corrente che si riferisce al file regolare più grande

@@ -1,9 +1,0 @@
-Allora nel programma:
-
-creo una maschera di creazione dei permessi
-creo una nuova cartella chiamata bar
-gli cambio i persmessi in rw-r--r--
-
-creo dapprima dell'esecizione del programma una cartella chiamata foo
-la apro con lo stat nel main
-gli prendo i permessi attuali e modifico impostando il set-group-ID e disattivando group-execute 

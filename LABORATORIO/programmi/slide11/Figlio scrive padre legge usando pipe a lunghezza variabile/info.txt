@@ -1,5 +1,0 @@
-Semplice protocollo di comunicazione tramite pipe anonima. 
-Dovendo inviare messaggi di lunghezza variabile ogni messaggio è preceduto da un intero che fornisce la sua lunghezza in caratteri
-IL PROTOCOLLO UTILIZZATO E' 
-LA PRIMA READ DICE IL NUMERO DI CARATTERI DELLA STRINGA 
-LA SECONDA READ S' LA STRINGA INVIATA

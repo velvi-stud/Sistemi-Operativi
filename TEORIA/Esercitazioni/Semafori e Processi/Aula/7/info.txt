@@ -1,0 +1,16 @@
+Realizzare la simulazione di un incrocio stradale regolato da un semaforo. 
+
+Le automobili sono rappresentate da processi, mentre il semaforo è rappresentato dalla struttura dati semaforo ed è regolato tramite un gestore, che si occupa di regolare il traffico.
+
+Il semaforo può assumere soltanto i valori rosso o verde.
+
+Quando un’auto arriva a uno dei quattro lati dell’incrocio, chiama la funzione arriva(lato) dove lato può assumere i valori 0,1,2,3. 
+
+Se il semaforo dal lato in cui è arrivata l’automobile è rosso, la funzione si blocca in attesa che diventi verde, altrimenti ritorna immediatamente.
+ 
+Quando l’auto lascia l’incrocio chiama la funzione lascia().
+
+Scrivere la struttura dati semaforo, le funzioni arriva e lascia ed il gestore, rispettando i seguenti vincoli:
+a) Il semaforo passa da rosso a verde e viceversa ogni 5 secondi;
+b) Il semaforo non può cambiare da rosso a verde se ci sono auto che impegnano l’incrocio.
+

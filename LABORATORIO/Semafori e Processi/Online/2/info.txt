@@ -1,4 +1,0 @@
-A pizza oven can contain nine pizzas but the oven narrow opening allows only one cook at a time to either put a pizza in the oven or to take one out. 
-Given that there will be more than one cook preparing pizzas at any given time.
-
-

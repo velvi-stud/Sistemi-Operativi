@@ -1,4 +1,0 @@
-Semplice esempio usando le fifo, pipe con nome di produttore consumatore
-
-
-

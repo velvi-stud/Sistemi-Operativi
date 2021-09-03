@@ -1,0 +1,32 @@
+Allora il programma sussiste in una variabile globale ogetto della race condition (in questo caso senza alcuna protezione)
+e per evidenziare l'alternanza delle operazioni, i processi thread e main stamplino un messaggio, risettivamente '.' e 'o'
+inoltre i processo esegiono entrambi un ciclo di 20 iterazioni che:
+
+la modifica della varaibile globale nel main è un'operazione atomica quindi andrà a buon fine sempre -> aggiorna solo 
+
+    - nel main:
+        for (i = 0; i < 20; i++) {
+            myglobal = myglobal + 1;
+            printf("o");fflush(stdout);
+            sleep(1);
+        }
+
+la modifica della variabile globale nel thread avviene attraverso un processo di controllo e assegnazione e pertanto necessita che sia bloccata da altre modifiche  altrimenti sarà incorretto il risultato nella nuova assegnazione
+
+    - nel thread: 
+        for (i = 0; i < 20; i++) {
+            j = myglobal;
+            j = j + 1;
+            printf("."); fflush(stdout);
+            sleep(1);
+            myglobal = j;
+        }
+
+
+risultato SENZA RACE CONDITION è:
+o.o.o.o.o.o..oo.o..o.oo..o.o.oo.o..o.oo.
+myglobal e’ uguale a 21
+
+invece di essere:
+o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o
+myglobal è uguale a 40

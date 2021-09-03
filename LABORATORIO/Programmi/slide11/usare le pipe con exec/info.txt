@@ -1,0 +1,16 @@
+in generale, il processo padre:
+    •Crea tante pipe quanti sono i processi figli meno uno
+    •Crea tanti processi figli quanti sono i comandi da eseguire
+    •chiude tutte le estremità delle pipe
+    •Attende la terminazione di ciascun processo figlio
+Ciascun processo figlio:
+    • Chiude le estremità delle pipe che non usa
+    • Imposta le estremità delle pipe che usa sugli opportuni canali standard
+    • Invoca una funzione della famiglia exec() per eseguire il propriocomando
+
+si ricorda che quando un processo chiama una funzione della famiglia exec esso viene completamente sostituito dal nuovo programma
+    • il pid del processo non cambia, dato che non viene creato un nuovo processo
+    • la funzione rimpiazza semplicemente lo stack, lo heap, i dati e il testo del processo corrente con un nuovo programma letto da disco
+
+Si ricorda che una volta chiamata la exec il processo figlio che la esegue perde quasi tutto apparte il path e gli standard input e output (che essi siano modificato o no). Infatti si utilizza la dup2 per modificare gli standard duplicandoli con i canali utilizzati per le pipe
+

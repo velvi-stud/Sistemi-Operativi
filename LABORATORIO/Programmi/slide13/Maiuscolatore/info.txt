@@ -1,0 +1,9 @@
+avviare il server maiuscolatore
+
+una volta connesso il programma
+
+creare un collegamento ove il programma risiede ossia:
+telnet 127.0.0.1 1313 
+
+scrivere il messaggio ed in automatico appare in maiuscolo
+

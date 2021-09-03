@@ -1,0 +1,19 @@
+Completare l'esempio del maiuscolatore, scrivendo il codice del client
+(caso del modello connection oriented). La struttura di quest'ultimo sarà
+la seguente:
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+main() {
+int sockfd;
+if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+perror("chiamata alla system call socket fallita");
+exit(1);
+}
+/* connessione al server */
+/* invio e ricezione della stringa */
+/* chiusura della connessione */
+}
+• Modificare il programma upperserver.c in modo che accetti più
+connessioni contemporaneamente (utilizzando la fork())

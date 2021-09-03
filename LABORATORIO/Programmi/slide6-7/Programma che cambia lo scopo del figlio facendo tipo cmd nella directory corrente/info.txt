@@ -1,0 +1,15 @@
+uando un processo chiama una funzione della famiglia exec
+esso viene completamente sostituito dal nuovo programma
+• il pid del processo non cambia, dato che non viene creato un
+nuovo processo
+• la funzione rimpiazza semplicemente lo stack, lo heap, i dati e il
+testo del processo corrente con un nuovo programma letto da
+disco
+
+uso la system call: int execvp(const char *file, char *const argv[]);  
+prende in input un vector e un riferimento ad un $path che sarà utilizzato dal programma specificato come primo parametro.
+esempio:
+./exe dir
+sarà:
+execvp (argv[1], &argv[1]); /* Esegue un altro programma */ 
+

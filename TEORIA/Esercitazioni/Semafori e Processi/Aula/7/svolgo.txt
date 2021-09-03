@@ -1,0 +1,54 @@
+mutex mst[4]=0;
+int master[4]=0;
+
+mutex ctrl=1;
+
+mutex verde=1; 
+int who; // -1 to 3 | -1 is not setted; 0,1,2,3 are semaphores 
+
+mutex GS=0;
+
+mutex pass[4]=0;
+int go = -1; // -1 to 3 | -1 is not setted; 0,1,2,3 are semaphores 
+
+Auto(x){
+	wait(mst[x])
+	if(master[x]==0){
+		master[x]=1
+		signal(mst[x])
+		wait(ctrl)
+		wait(verde)
+		who = x
+		signal(verde)
+		signal (GS)
+	}
+	else{
+		signal(mst[x])
+	}
+	wait(pass[x])
+	if(go==x){
+		// PASSA
+		signal(pass[x])
+	}
+	else{
+		signal(pass[x])
+		Auto(x)
+	}
+}
+
+
+Gestore(){
+	wait(GS)
+	wait(verde)
+	go = who
+	signal(pass[who])
+	sleep(5)
+	wait(pass[who])
+	go = -1
+	signal(pass[who])
+	signal(verde)
+	signal(ctrl)
+}
+
+
+

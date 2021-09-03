@@ -1,2 +1,0 @@
-crea una fifo nella cartella con i dovuti criteri
-

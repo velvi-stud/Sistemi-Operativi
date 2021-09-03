@@ -1,2 +1,0 @@
-non fa nient'altro che una stat su ogni argv e controlla se l'argomento:
-IS_REGULAR o IS_BLOCK

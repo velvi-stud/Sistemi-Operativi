@@ -1,1 +1,0 @@
-il programma creera un thread esegue la funzione di calcolo l'N-esimo numero primo

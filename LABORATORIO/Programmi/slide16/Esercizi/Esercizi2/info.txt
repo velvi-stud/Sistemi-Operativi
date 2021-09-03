@@ -1,0 +1,5 @@
+Si realizzi un programma C e Posix in ambiente Linux che, impiegando la libreria Pthread, generi tre thread
+• I primi due thread sommano al più 1000 numeri generati casualmente (al più 500 a testa) tra 1 e 10 ed ogni volta incrementano di tale ammontare un contatore
+• Il terzo thread attende che il contatore incrementato dai due thread raggiunga un valore >= al valore fornito da riga di comando, notifica l’avvenuta condizione e
+termina, se il contatore non raggiunge il numero dato allora visualizzare un messaggio.
+• Utilizzare le variabili condizione

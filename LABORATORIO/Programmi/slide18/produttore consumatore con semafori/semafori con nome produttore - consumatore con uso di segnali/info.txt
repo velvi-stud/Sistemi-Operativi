@@ -1,0 +1,50 @@
+• Introducendo mutex e variabili di condizione, abbiamo visto alcune soluzioni possibili per sincronizzare l’attività di n thread produttori che inserivano elementi in un buffer condiviso ed elaborati da un singolo thread consumatore
+1. Nella prima soluzione, il consumatore era avviato solo dopo che gli n produttori avevano completato il loro compito. Il problema si risolveva con un unico mutex
+2. Nella soluzione successiva, il consumatore era avviato prima che gli n produttori finissero il loro compito. Ciò ha richiesto un mutex per sincronizzare i produttori ed una variabile di condizione (con relativo mutex) per sincronizzare il consumatore con i produttori
+
+• Estendiamo il problema del produttore e del consumatore visto per i mutex e le variabili condizione usando un buffer condiviso circolare:
+• Dopo che il produttore ha riempito l’ultima entrata (buff[NBUFF-1]), ritorna indietro e riempie la prima entrata (buff[0]). Il consumatore fa lo stesso
+• Ciò aggiunge un ulteriore problema di sincronizzazione poiché il produttore non deve superare il consumatore
+• Assumiamo che produttore e consumatore siano thread (possono essere anche processi)
+
+• Tre condizioni devono essere rispettate quando il buffer è circolare:
+1. Il consumatore non può cercare di rimuovere un elemento dal buffer quando il buffer è vuoto
+2. Il produttore non può provare a inserire un elemento quando il buffer è pieno
+3. Le variabili condivise possono descrivere lo stato del buffer (indici, contatori …), per cui tutti gli accessi al buffer del produttore e del consumatore devono essere protetti per evitare race condition
+
+• La soluzione adotta tre tipi differenti di semafori:
+1. Un semaforo binario chiamato mutex protegge le regioni critiche: l’inserimento di un elemento nel buffer (produttore) e la rimozione di un elemento dal buffer (consumatore). Il semaforo binario usato come mutex è inizializzato a 1
+2. Un semaforo contatore chiamato nempty conta il numero di posti vuoti nel buffer. Questo semaforo è inizializzato al numero di locazioni del buffer (NBUFF)
+3. Un semaforo contatore nstored conta il numero di locazioni occupate del buffer. Questo semaforo è inizializzato a 0, poiché all’inizio il buffer è vuoto
+
+• In questo esempio, il produttore memorizza gli interi tra 0 e nitems nel buffer (buff[0]=0, buff[1]=1, …), usando il buffer come buffer circolare
+• Il consumatore prende gli interi dal buffer e verifica che essi siano corretti, stampando eventuali errori sullo standard output
+
+• Il buffer contenente NBUFF elementi è condiviso dai due thread così come i puntatori ai semafori
+• Raggruppiamo questi elementi in una struttura per evidenziare che i semafori sono usati per sincronizzare l’accesso al buffer
+
+• Sono creati tre semafori
+• Ci assicuriamo che i semafori siano correttamente inizializzati usando il flag O_EXCL (che restituisce un errore se il semaforo già esiste)
+• Creiamo due thread senza passare alcun argomento ad essi
+
+• Il produttore chiama sem_wait() sul semaforo nempty per aspettare che ci sia spazio disponibile per un altro elemento nel buffer
+• La prima volta che è eseguita questa istruzione il valore del semaforo andrà da NBUFF a NBUFF-1
+• Prima di memorizzare un nuovo elemento nel buffer, il produttore deve ottenere il semaforo mutex
+• Dopo aver memorizzato l’elemento nel buffer, il semaforo mutex è rilasciato (il valore va da 0 a 1), e viene fatto un post al semaforo nstored. La prima volta che è eseguita questa parte, il valore di nstored va da 0 a 1
+
+• Quando il valore del semaforo nstored è maggiore di 0, sono disponibili diversi valori da elaborare
+• Il consumatore prende un elemento dal buffer e verifica che il valore sia corretto, proteggendo l’accesso al buffer con il semaforo mutex
+• Il consumatore poi fa un post al semaforo nempty comunicando al produttore che c’è un altro posto vuoto
+
+•	Se scambiamo l’ordine delle due chiamate a sem_wait() nella funzione consume, assumendo che il produttore inizi per primo
+•	esso memorizza NBUFF elementi nel buffer
+•	decrementa il valore del semaforo nempty da NBUFF a 0 e incrementa il valore del semaforo nstored da 0 a NBUFF
+•	A quel punto il produttore si blocca nella chiamata a sem_wait(shared.nempty) poiché il buffer è pieno e non ci sono locazioni libere per un altro elemento
+•	Il consumatore inizia e verifica i primi NBUFF elementi del buffer
+•	Decrementa il valore del semaforo nstored da NBUFF a 0 e incrementa il valore del semaforo nempty da 0 a NBUFF
+•	Il consumatore poi si blocca nella chiamata a sem_wait(shared.nstored) dopo aver chiamato sem_wait(shared.mutex)
+•	Il produttore può riprendere poiché il valore di nempty è maggiore di 0, ma il produttore poi chiama sem_wait(shared.mutex) e si blocca
+•	Abbiamo così un deadlock: il produttore aspetta il semaforo mutex, ma il consumatore occupa questo semaforo ed aspetta il semaforo nstored. Ma il produttore non può fare un post al semaforo nstored fino a che non ottiene il semaforo mutex
+
+
+

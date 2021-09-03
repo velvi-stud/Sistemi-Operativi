@@ -1,0 +1,30 @@
+const:
+	N: int: 8 //ATTESA
+
+var:
+	posti: signal: N
+	sedia: signal: 1
+	cliente: signal: 0
+
+process_barber(){
+repeat
+	wait(cliente); //dorme
+	<fai il taglio>
+	sleep(5);
+	signal(posti);
+	signal(sedia);
+forever
+}
+
+
+proces_cliente(){
+	if(value(posti)==0)
+		exit();
+
+	wait(posti);
+	signal(cliente);
+	wait(sedia);
+	<riceve il taglio>
+	
+	exit();
+}

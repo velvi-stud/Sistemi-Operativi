@@ -1,0 +1,49 @@
+Il problema si divide in due parti, ma la caratteristica è il protocollo di comunicazione usato: 
+
+1) una singola path per la fifo del server:
+    #define SERVER_FIFO_NAME "/tmp/serv_fifo"
+2) più path per le fifo per ogni processo cliente, in particolare, poichè bisogna creare una fifo per ogni processo, quindi renderla personale, si può instanziare una define veriabile:
+#define CLIENT_FIFO_NAME "/tmp/cli_%d_fifo"
+in questo caso, tramite la sprintf(client_fifo, CLIENT_FIFO_NAME, my_data.client_pid);  modifico il %d dentro la define e andremo a linkare a seconda del pid dei processi client. Ad esempio:
+    il pid del processo client [1] è 555 la relativa fifo creata sarà in /tmp/cli_555_fifo */
+    il pid del processo client [2] è 534 la relativa fifo creata sarà in /tmp/cli_534_fifo */
+3) un size buffer che rappresenta :
+#define BUFFER_SIZE 40
+4) una struttra utilizzata come ogetto di comunicazione tra client e server, in particolare inviata dal client al server per l'elaborazione della stringa some_data e per individuare quale fifo deve aprire (tramite la sprintf e il client_pid) il server per inviare la struct modificata:
+struct data_to_pass_st {
+    pid_t client_pid;
+    char some_data[BUFFER_SIZE];
+};
+
+
+
+Il programma del lato SERVER
+    crea una propria fifo (se non esiste)
+    apre la suddetta fifo in modalità lettura
+    attende 10 secondi (il tempo di mandare in esecuzione i processi client)
+    nel ciclo esegue una read della pipe, quindi attende finchè ci sarà un processo che abbia aperta la fifo in scrittura attivo
+    se gli viene inviato qualcosa nella pipe, allora lo elabora
+        in particolare l'ogetto di interscambio è la struct data_to_pass_st my_data che:
+            inviata al server, trasforma tutta la stringa situata in some_data a caratteri maiuscoli
+            apre la fifo tramite il client_fifo dedotta dalla sprintf(client_fifo, CLIENT_FIFO_NAME, my_data.client_pid); 
+            e gli invia la struct precendentemente inviata e modificata.
+        chiude la fifo del relativo processo my_data.client_pid
+    chiudo la fifo del server
+    elimino tramite l'unlink la fifo del server
+    termino
+
+
+Il programma dal lato CLIENT
+    apre la fifo del server in modalità scrittura
+    creo una fifo personale del client di path client_fifo dedotta dalla sprintf(client_fifo, CLIENT_FIFO_NAME, getpid()); 
+    scrivo nella struct data_to_pass_st my_data nella variabile specifica some_data e my_data.client_pid = getpid();
+    scrive sulla fifo del server la variabile struct data_to_pass_st my_data con gli opportuni campi modificati correttamente
+    poi apre la sua fifo in modalità lettura
+    aspettando che il processo server scriva qualcosa sulla fifo
+    una volta ricevuta chiude il lato della fifo personale
+    chiude la fifo del server
+    esegue l'unlink della sua fifo
+    chiude il programma
+
+
+

@@ -1,7 +1,0 @@
-il programma in questone -> CONSUMATORE
-Avvia il processo di read che fa scattare le write del Produttore.
-Per ogni read del Consumatore (richiesta) avverrà una write del Produttore (produzione) sul buffer fifo 
-Tutto ciò fin quando il Produttore non avrà più niente da produrre (finchè i byte inviati siano pari a 10240000) in quanto termina il ciclo delle chiamate alla write.
-
-
-

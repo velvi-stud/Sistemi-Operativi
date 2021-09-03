@@ -1,0 +1,54 @@
+Uso una exec per far eseguire al processio figlio un programma che si chiama "ls" con parametri in input "-l".
+Il programma che si vuole eseguire si trova nella directory "/bin/ls".
+-// int execl (const char *path, const char *arg0, ... /* (char *)0 */ ); prende in input una lista
+
+un processo chiama una funzione della famiglia exec esso viene completamente sostituito dal nuovo programma,mantiene la stessa process structure, ossia, ad esempio, il pid e il ppid del processo non cambia, dato che non viene creato un nuovo processo questa funzione rimpiazza semplicemente lo stack, lo heap, i dati e il testo del processo corrente con un nuovo programma letto da disco.
+
+Utilizzo una vfork perchè così verra eseguito prima il processo figlio, poi il processo padre:
+
+void stamp(char *c){printf("\n%s-> processo: %d padre: %d \n",c,getpid(),getppid());} 
+
+int main (void) {
+stamp("start");
+pid_t childpid= vfork();
+stamp("after fork");
+if(childpid == 0){
+    stamp("son");
+    execl("/bin/ls", "ls", "-l", NULL); /* Esegue ls -l */ 
+    printf("Questa riga non dovrebbe essere eseguita\n");
+}
+else{
+    stamp("father");
+}
+}
+
+Qui eseguierà prima il figlio poi il padre:
+start-> processo: 4088 padre: 4072 
+after fork-> processo: 4089 padre: 4088 
+son-> processo: 4089 padre: 4088 
+after fork-> processo: 4088 padre: 4072 
+father-> processo: 4088 padre: 4072 
+
+
+int main (void) {
+stamp("start");
+pid_t childpid= fork();
+stamp("after fork");
+if(childpid == 0){
+    stamp("son");
+    execl("/bin/ls", "ls", "-l", NULL); /* Esegue ls -l */ 
+    printf("Questa riga non dovrebbe essere eseguita\n");
+}
+else{
+    stamp("father");
+}
+}
+
+Qui eseguirà a caso, in questo esempio esegue prima il padre:
+start-> processo: 4088 padre: 4072 
+after fork-> processo: 4088 padre: 4072 
+father-> processo: 4088 padre: 4072 
+after fork-> processo: 4089 padre: 4088 
+son-> processo: 4089 padre: 4088 
+
+

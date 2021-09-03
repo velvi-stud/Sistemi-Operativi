@@ -1,7 +1,0 @@
-#!/bin/bash #domanda
-echo -n "quanti anni hai?" #risposta
-read ANNI
-#costrutti if annidati if [ “$ANNI” -lt 10 ] then
-echo "sei un bambino" elif [ “$ANNI” -lt 18 ] then
-echo "sei minorenne" else
-echo "sei maggiorenne" fi

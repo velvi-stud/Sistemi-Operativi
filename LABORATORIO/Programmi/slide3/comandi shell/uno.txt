@@ -1,0 +1,142 @@
+
+SHELL
+•La shell è un programma speciale usato come interfaccia tra l’utente ed il kernel del sistema operativo UNIX/Linux tramite dei comandi digitati.
+•La shell GNU Bourne Again o Bash, è la shell di default di Linux è molto efficiente per operazioni: Sia a livello di programmazione che di uso interattivo. Inoltre, all’utente è consentito di adattare il proprio ambiente di lavoro
+•E’ una delle più popolari shell usate dagli utenti UNIX e Linux ed è conforme allo standard POSIX (Il prompt di default è il $).
+•Le Directory sono organizzato nel seguente modo:
+	- /dev			contiene i driver dei dispositivi
+	- /bin e /usr/bin	contiene i comandi Linux standard
+	- /lib e /usr/lib	contiene le librerie standard di Linux
+	- /var			contiene i file di configurazione ed i LOG file
+	- /etc			contiene i file di configurazione di default
+	- /usr/local/bin	contiene comandi che non fanno parte della distribuzione ma sono stati introdotti successivamente
+	- /opt			contiene software commerciale
+	- /tmp			memorizza file temporanei
+	- /sbin e /usr/sbin	contiene i comandi di sistema dell’amministratore (/sbin sta per “safe” bin)
+
+COMANDI SHELL
+•help: manuale che spiega la sintassi del comando
+	$ ls - - help
+		#E' la guida che spiega la sintassi del comando ls
+	$ ls - - help | less 
+		#consente di visualizzare la guida del comando ls su più pagine video (vedi comando less) 
+•man [comando]: consente di consultare il manuale in linea
+•cd: consente di cambiare la directory corrente in quella indicata in <directory> (change directory)
+	$ cd Desktop
+		#se la directory corrente è home porta nella directory Desktop
+	$ cd .. 
+		#porta della directory superiore (o padre)
+	$ cd /var 
+		#in qualunque directory ci si trovi porta nella directory /var
+	$ cd ~ oppure cd
+		#porta della directory home dell'utente (/home/[nome utente])
+	$ cd - 
+		#porta della directory precedente 
+•pwd: mostra la directory corrente
+•ls: lista il contenuto di una directory (cartella). 
+	I Parametri:
+		- a lista anche i file nascosti
+		- l mostra tutte le informazioni per ogni file (formato lungo)
+		- k dimensione dei file è in Kb (normalmente è in byte).
+		- F classifica i file a seconda del tipo.
+		- R elenco ricorsivo
+		- lah formato lungo
+	$ ls - l 
+		#contenuto della directory corrente in formato lungo
+	$ ls - a
+		#contenuto della directory iniziale (root) compresi i file nascosti
+	$ ls - lah
+		#contenuto della directory corrente in formato lungo
+	$ ls - R
+		#elenco ricorsivo
+•touch [nomefile]: si posiziona all'interno del file e permette anche di scrivere, se non esiste lo crea
+•cp: copia file e director (Il parametro - r copia le directory e le sottodirectory ricorsivamente)
+	$ cp file1 cart1
+		#copia file1 dentro la directory cart1
+	$ cp - r cart1 cart2 
+		#copia tutta la directory cart1 dentro a cart2
+	$ sudo cp - a cart1 cart2 
+		#copia tutta la directory cart1 dentro a cart2 mantenendo gli stessi permessi e le informazioni su data e ora di creazione
+	$ cp - rv cart1 cart2 
+		#copia tutta la directory cart1 dentro a cart2 visualizzando l'operazione (verbose)
+•mv: muove o rinomina un file o una directory (Il parametro - i chiede la conferma)
+	$ mv vecchio nuovo 
+		#rinomina il file vecchio in nuovo
+	$ mv file1 cart1 
+		#sposta il file file1 dentro la directory cart1
+•rm: rimuove un file o una directory (Il parametro - rf cancella ricorsivamente sia le cartelle che il loro contenuto)
+	$ rm file1 file2
+		#cancella file1 e file2
+	$ rm *.* 
+		#cancella TUTTO il contenuto della directory corrente. Le eventuali directory presenti non saranno rimosse. Da usare con cautela !
+	$ rm - rf cart1 
+		#cancella tutto il contenuto della directory cart1
+•rmdir: rimuove una directory vuota, con questo comando è possibile cancellare una o più directory vuote (remove directory)
+	$ rmdir prova 
+		#cancella la directory vuota prova
+•mkdir: crea una directory
+	$ mkdir prova 
+		#crea la directory prova
+•pwd: mostra la directory corrente, con questo comando è possibile sapere in quale directory ci troviamo (print working directory)
+	$ pwd 
+		#Se l'utente ECOmmunication si trova nella cartella principale visualizza /home/ecommunication
+•chmod: con questo comando è possibile modificare i permessi di un file. (Il parametro - R consente di modificare ricorsivamente i permessi delle directory indicate e del loro contenuto)
+	$ chmod 0755 file1 
+		#imposta lettura, scrittura ed esecuzione per il proprietario, e lettura ed esecuzione per gruppo ed altri per file1
+	$ sudo chmod - R 0755 dir1 
+		#imposta lettura, scrittura ed esecuzione per il proprietario, e lettura ed esecuzione per gruppo ed altri per la directory di1 e per i file contenuti
+	$ chmod u+rwx file1
+		#imposta lettura, scrittura ed esecuzione per il proprietario lasciando inalterati gli altri permessi
+	$ chmod ugo+rwx file1
+		#imposta lettura, scrittura esecuzione per tutti (u user, g group, o other)
+	$ chmod ugo- x file1
+		#rimuove il permesso di esecuzione a tutti
+•chown: modificare il proprietario di un file, con questo comando è possibile modificare il proprietario di un file. (Il parametro - R consente di modificare ricorsivamente i permessi delle directory indicate e del loro contenuto).
+	$ chown nome1 file1 
+		#rende il file1 proprietario di nome1
+	$ chown nome1:gruppo1 file1 
+		#rende il file1 proprietario di nome1 e del gruppo1
+	$ chown - R nome1:gruppo1 dir1 
+		#rende la directory dir1 e i file contenuti proprietari di nome1 e del gruppo1
+	$ sudo chown - R root:root drupal
+		#rende la directory drupal e i file contenuti proprietari di root e del root
+•cat: visualizza il contenuto di uno o più file
+	$ cat file1 
+		#visualizza il contenuto del file1
+	$ cat file1 file2 > file3 
+		#crea file3 con il contenuto di file1 e file2
+	$ cat file1 file2 >> file3 
+		#aggiunge il contenuto di file1 e file2 al file3
+	$ cat file1 - n
+		#visualizza il contenuto del file1 numerandolo
+	$ tac file1 
+		#visualizza il contenuto del file1 in ordine inverso
+•tar: crea/decomprime archivi compressi. Comprimere file1 file2 in archivio.tar.gz:
+	$ tar - cvzf archivio.tar.gz file1 file2 
+		#variabili c= crea, v=verbose, z=comprimi, f=nome archivio (ES archivio.tar.gz)
+	$ tar - xvf archivio.tar.gz
+		#x=estrai, v=verbose, f=nome archivio (ES archivio.tar.gz)
+•who: stampa il nome di tutti gli utenti attualmente connessi al sistema. Oltre al nome degli utenti ci indica su che terminale sono connessi e quando si sono collegati. 
+•whoami: stampa il nome con il quale ci siamo connessi al sistema.
+•ps: consente di visualizzare lo stato dei programmi presenti nel sistema. Lanciato senza parametri, visualizza i dati dei programmi associati con l'utente che l'ha lanciato. (Il paramentro - a visualizza tutti i processi del sistema, anche quelli associati ad altri terminali o non associati a nessun terminale (i cosiddetti daemon)).
+	$ ps - a 
+		#stampa a video tutti i processi, si può implementare la pipe e la grid per cercare tra i processi
+•pipe o "|" : il metodo secondo il cuale è possibile eseguire varie azioni senza esplicare su più linee nella shell
+	$ ps - ef |grep http | wc - l
+		#Con questo comando si chiede l’elenco di tutti i processi, quindi filtrare con quello che contiene la stringa “http” e finalmente si chiede il numero di linee. Così, in breve si conta il numero di processi http in esecuzione.
+•Kill: mandare un segnale ad un processo identificato con il PID (process id). 
+	$ kill –l
+		#elenca tutta la scelta dei possibili segnali in una tabella
+	$ kill –s stop PID_number
+		#invia un segnale di stop al processo identificato con quel numero
+	$ kill –s cont PID_number
+		#riprende il processo fermato (digitarlo da altra shell)
+•ln - s: crea il soft- link, un collegamento indipendete
+	$ ln - s /etc/hosts ./hosts
+		#crea un soft link del file /etc/hosts nella directory corrente. Oppure
+	$ ln - s /etc ./lamiaetc
+		#crea un soflink chiamato lamiaetc che punta a /etc nella directory corrente.
+•ls: crea l’hard- link, un collegamento stile puntatore
+	$ ln /var/www/pippo.html /var/www/topolino.html
+		#fa un hard_link del file pippo nella stessa cartella ma rinominato con topolino
+

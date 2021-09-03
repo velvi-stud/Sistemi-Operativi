@@ -1,7 +1,0 @@
-Lo scopo del programma è:
-creare un processo figlio che aspetti 3 secondi e invii un segnale SIGUSR1 al processo padre
-il padre aspetta 6 secondi e nel contempo attende che il processo figlio gli invii il messaggio.
-
-si utilizzano le funzioni 
-int kill(pid_t pid, int signo); -> per inviare un segnale signo al processo pid
-void *signal (int signo, void (*func)(int)); -> che chiamata in un istante definito da quell'istante in poi il segnale specificato da signo viene trattato dalla funzione passata come argomento.

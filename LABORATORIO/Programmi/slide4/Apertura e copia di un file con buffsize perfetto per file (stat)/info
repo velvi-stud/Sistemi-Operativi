@@ -1,0 +1,1 @@
+vedo prima lo struct stat del file che ha il campo st_blksize che identifica il miglior blocco di bytes del buffer questa volta il file c ha i file da utilizzare (non sono 0, stdin o 1, stdout);

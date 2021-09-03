@@ -1,3 +1,0 @@
-crea una fifo nella cartella specificata ex: "/tmp/nome_fifo"
-crea una fifo nella cartella corrente ex: "./nome_fifo"
-

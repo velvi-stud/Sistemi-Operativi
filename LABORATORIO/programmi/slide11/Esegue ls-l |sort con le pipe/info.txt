@@ -1,3 +1,0 @@
-la pipe è vuota e il lato di scrittura è ancora aperto, si sospende fino a che diventa disponibile qualche input.
-quindi la sort aspetta la scrittura della ls e poi esegue la sort
-entrambi non necessitano di read e write perchè le exec lavorano direttamente sulla shell

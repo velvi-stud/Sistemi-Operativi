@@ -1,0 +1,9 @@
+il programma in questone -> PRODUTTORE
+produce un totale di informazioni pari a 1024*1000*10 B -> 10240000 Byte
+vengono inviati 4096 Byte(PIPE_BUF == BUFFER_SIZE) ogni volta (per 2500 volte = 10240000 Byte)
+il processo aspetta che il CONSUMATORE abbia una read per iniziare a produrre.
+Per ogni read del Consumatore (richiesta) avverrà una write del Produttore (produzione) sul buffer fifo 
+Tutto ciò fin quando il Produttore non avrà più niente da produrre (finchè i byte inviati siano pari a 10240000).
+
+
+

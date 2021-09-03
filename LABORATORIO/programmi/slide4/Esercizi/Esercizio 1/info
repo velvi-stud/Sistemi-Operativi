@@ -1,8 +1,0 @@
-Prende in input coppie di interi utilizzando la system call read: 
-Calcola la somma degli interi, 
-Stampa a video il risultato, 
-utilizzando la write, 
-Termina quando il primo input e' -1, 
-Assumere che gli interi consistano di una sola cifra.
-
-

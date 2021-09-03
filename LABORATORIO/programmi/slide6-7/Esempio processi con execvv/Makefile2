@@ -1,8 +1,0 @@
-# makefile per prova8
-# versione 1
-output: due.o
-	gcc -o due due.o
-due.o: due.c
-	gcc -c due.c
-clean:
-	rm *.o output

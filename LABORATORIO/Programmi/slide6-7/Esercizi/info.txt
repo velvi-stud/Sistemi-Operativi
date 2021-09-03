@@ -1,0 +1,8 @@
+Scrivere un programma che crea uno zombie e poi esegue il comando ps per verificare che il processo è uno zombie
+
+il processo si dice zombie se è terminato ma è in attesa che il padre ne rilevi lo stato di terminazione.
+
+utilizzo la vfork per il figlio perchè pid_t vfork (void); residente in (<unistd.h>). Crea un nuovo processo figlio, esattamente come fork, ma senza copiare lo spazio di indirizzamento. Fino a che il figlio non esegue una exec o exit, esso viene eseguito nello spazio di indirizzamento del genitore (tecnica Copy on Write). Assicura che il figlio venga eseguito per primo, fino a quando questi non chiama exec o exit. La funzione vfork viene utilizzata quando il processo generato ha lo scopo di eseguire (exec) un nuovo programma.
+
+Una volta che il processo (futuro zombie) esegue aspetta 5 sec e termina.
+Poichè è eseguito con la vfork mentre il processo è terminato il padre esegue la ps e vede che il processo è in stato zombie
