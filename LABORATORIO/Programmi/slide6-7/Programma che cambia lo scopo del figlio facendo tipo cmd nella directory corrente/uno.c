@@ -10,8 +10,12 @@
 #include <sys/wait.h>
 #include <stdio.h>
 int main (int argc, char *argv[]) { 
-if (fork () == 0) { /* Figlio */
-execvp (argv[1], &argv[1]); /* Esegue un altro programma */ 
-fprintf (stderr, "Non ho potuto eseguire %s\n", argv[1]);
-}
+	/* Figlio */
+	
+	if (fork () == 0) { 
+		execvp (argv[1], &argv[1]); /* Esegue un altro programma */ 
+		fprintf (stderr, "Non ho potuto eseguire %s\n", argv[1]);
+	}
+	
+	return 1;
 }

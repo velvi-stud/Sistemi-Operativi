@@ -1,4 +1,4 @@
-uando un processo chiama una funzione della famiglia exec
+Quando un processo chiama una funzione della famiglia exec
 esso viene completamente sostituito dal nuovo programma
 • il pid del processo non cambia, dato che non viene creato un
 nuovo processo

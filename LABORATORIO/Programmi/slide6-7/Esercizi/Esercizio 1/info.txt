@@ -6,3 +6,4 @@ utilizzo la vfork per il figlio perchè pid_t vfork (void); residente in (<unist
 
 Una volta che il processo (futuro zombie) esegue aspetta 5 sec e termina.
 Poichè è eseguito con la vfork mentre il processo è terminato il padre esegue la ps e vede che il processo è in stato zombie
+

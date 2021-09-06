@@ -5,41 +5,38 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include "apue.h" 
+#include "apue.h"
+
 #define PATH_MAX 4096
-int main(void)
-{
 
-char *currentfolder=malloc(PATH_MAX);
-if(getcwd(currentfolder,PATH_MAX)==NULL)
-perror("errore cartella");
-//printf("%s\n",currentfolder);
+int main(void) {
+	
+	umask(0);
 
-/* creo una carella nella directory presente aggiungendo "/bar" */
-umask(0);
-strcat(currentfolder,"/");
-char *namenewfolder="bar";
-if(mkdir(strcat(currentfolder,namenewfolder),0600)<0)
-printf("mkdir error for %s\n",namenewfolder);
-printf("NEW PATH: %s\n",currentfolder);
+    char * currentfolder = malloc(PATH_MAX);
+    
+    getcwd(currentfolder, PATH_MAX);
 
-/* modo assoluto a "rw-r--r--" */
-if (chmod(namenewfolder, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
-perror("chmod error for bar");
-printf("chmod ok for %s, new permits: rw-r--r--\n",namenewfolder);
+    /* creo cartella corrente "/bar" */
+    strcat(currentfolder, "/");
+    char * namenewfolder = "bar";
+  	char * fold= strcat(currentfolder, namenewfolder);
+  	
+  	// se esiste la cencello
+  	rmdir(fold);
+    
+    // creo cartella e assegno permessi a tutti
+    mkdir(fold, 0777);
 
-/* apre lo stat di foo per gli st_mode */ 
-struct stat statbuf;
-if (stat("foo", &statbuf) < 0) // ricerca foo nella cartella di lavoro se non specifichi il path
-perror("stat error for foo");
-else
-printf("stat ok for foo\n");
+    /* cambio permessi a "bar" da rwx-rwx-rwx to "rw-r--r--" */
+    chmod(namenewfolder, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 
-/* impostai suoi vecchi permessi ed inserisce il set-group-ID e disattiva group-execute */ 
-if (chmod("foo", (statbuf.st_mode & ~S_IXGRP) | S_ISGID) < 0)
-perror("chmod error for foo");
-else
-printf("chmod ok for foo, new permits %d\n",statbuf.st_mode);
+    /* apre lo stat di "foo" per gli st_mode */
+    struct stat statbuf;
+    stat("foo", & statbuf);
 
-exit(0);
+    /* impostai suoi vecchi permessi ed inserisce il set-group-ID e disattiva group-execute */
+    chmod("foo", (statbuf.st_mode & ~S_IXGRP) | S_ISGID);
+
+    exit(0);
 }

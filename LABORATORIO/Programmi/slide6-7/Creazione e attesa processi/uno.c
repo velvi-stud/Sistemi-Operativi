@@ -32,7 +32,7 @@ int main (int argc, char *argv[]) {
     n = atoi(argv[1]);
 
     for (i = 1; i <= n; i++){      
-        if ( (childpid=fork) == 0){
+        if ( (childpid=fork()) == 0){
             printf("\n ...Blocco istruzioni processo: %d (figlio di %d)", getpid(), getppid());
             break;
         }else{
@@ -42,7 +42,7 @@ int main (int argc, char *argv[]) {
 
     /* usciranno i processi creati (ed il padre) */
 
-    if(argc != 0) {
+    if(argc != 1) {
         while((childpid != (waitreturn = wait(NULL)))){
         printf("\nsono: %d aspetto: %d", getpid(), waitreturn);
             if (waitreturn == -1)

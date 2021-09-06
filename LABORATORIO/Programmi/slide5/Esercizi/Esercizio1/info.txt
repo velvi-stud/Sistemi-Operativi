@@ -1,3 +1,13 @@
 Creare un link simbolico con il comando ln -s. 
 Scrivere un programma che selezioni il link nella directory data in input e stampi a video il nome del file.
 
+DIR *dir
+
+dir = opendir(argv[1])
+
+struct stat *elem
+struct dirent *d
+
+while(elem=eddir(DIR)!=NULL && readdir(d,dir))
+	d->d_name
+	elem->d_name

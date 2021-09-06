@@ -1,0 +1,46 @@
+
+mutex barber = 0;
+mutex aspetto = 1;
+int sedie = 0; // incluso quella di taglio barbiere
+cost N = 6;
+mutex taglio = 1;
+
+
+barbiere(){
+
+	// dorme
+	wait(barber)
+	
+	// taglia i capelli
+	signal(barber)
+	
+	// libero poltrona
+	signal(taglio)
+}
+
+cliente(){
+
+	// vede se ci sono posti a sedere
+	wait(aspetto)
+	
+	if (sedie<N){ // mi siedo e attendo
+		sedie ++;
+		signal(aspetto)
+	}
+	else{ // non ci sono posti, esco
+		signal(aspetto)
+		exit;
+	}
+	
+	wait(taglio)
+	signal(barber)
+	// taglio capelli
+	
+	// lascio posto
+	wait(aspetto)
+	sedie --;
+	signal(aspetto)
+	
+	exit;
+
+}

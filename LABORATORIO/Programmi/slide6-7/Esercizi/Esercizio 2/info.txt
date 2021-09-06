@@ -1,0 +1,4 @@
+Scrivere un programma che crea uno zombie e poi esegue il comando
+ps -s | grep Z+
+
+che vede i processi zombie

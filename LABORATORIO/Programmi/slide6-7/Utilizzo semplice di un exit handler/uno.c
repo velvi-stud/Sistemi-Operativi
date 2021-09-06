@@ -14,17 +14,19 @@ static void my_exit1(void){ printf("Primo exit handler\n");}
 static void my_exit2(void){ printf("Secondo exit handler\n");}
 
 int main (void){
-if (atexit(my_exit2)!=0)
-    printf("Non posso registrare my_exit2");
 
-if (atexit(my_exit1)!=0)
-    printf("Non posso registrare my_exit1"); 
+	if (atexit(my_exit2)!=0)
+		printf("Non posso registrare my_exit2");
 
-if (atexit(my_exit1)!=0)
-    printf("Non posso registrare my_exit1"); 
+	if (atexit(my_exit1)!=0)
+		printf("Non posso registrare my_exit1"); 
 
-printf("Main ha completato\n");
-return(0);
+	if (atexit(my_exit1)!=0)
+		printf("Non posso registrare my_exit1"); 
+
+	printf("Main ha completato\n");
+	
+	return(0);
 }
 
 
