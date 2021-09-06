@@ -8,64 +8,70 @@
 #include <dirent.h>
 #include "apue.h" 
 #include <sys/wait.h>
-#include <math.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <signal.h>
-#define READ 0
-#define WRITE 1
 
-int main(int argc, char *argv[]){
-    
+/*
+scrivere un programma che esegua il comando di shell 
+“ls -l| sort| grep <pat>” con tre processi distinti
+e scrivere l'output su un file
+*/
+
+int main(int argc, char const *argv[])
+{
     if(argc<2){
-        printf("Inserire un pattern\n");
-        exit(-2);
-    }
-    else{
-        if(strlen(argv[1])>=50){
-            printf("size pattern eccessivo\n");   
-            exit(-3); 
-        }
+        printf("Inserire pattern\n");
+        exit(2);
     }
 
-    // creaazione pipe
-    int fd[2];
-    pipe(fd);
+    int pp[2], oo[2];
+    pipe(pp);
+    pipe(oo);
 
-    int child1 = fork();
-    if(child1==0){ // figlio 1 usa la grep <pat> delle cose lette dalla pipe -> aspetta che il padre scriva
-        waitpid(getppid(),NULL,0);
-        close(fd[WRITE]);
-        dup2(fd[READ],READ);
-        close(fd[READ]);
-        printf("figlio 1\n");
-        execlp("grep","grep",argv[1],NULL);
+    if(!vfork()){
+
+        close(oo[0]); close(oo[1]); close(pp[0]);
+
+        dup2(pp[1],1); // dup scrittura
+
+        close(pp[1]);
         
-        exit(42);
+        execl("/bin/ls","ls","-l",NULL);
+        exit(2);
     }
-    else{ //padre usa la ls -R  e scrive sulla pipe
-        int ad[2];
-        pipe(ad);
-        int child2 = fork();
-        if(child2==0){ // figlio 2 usa la ls -l e manda direttamente il messaggio al padre
-            close(ad[READ]);
-            dup2(ad[WRITE],WRITE);
-            close(ad[WRITE]);
-            printf("figlio 2\n");
-            execlp("ls","ls","-l",NULL);
-            
-            exit(43);
-        }
-        else{ // padre usa la sort -> aspetta che il figlio 2 scriva sullo STDOUT e manda il risultato la figlio 1
-            close(ad[WRITE]);
-            close(fd[READ]);
-            dup2(ad[READ],READ);
-            dup2(fd[WRITE],WRITE);
-            close(ad[READ]);
-            close(fd[WRITE]);
-            printf("padre\n");
-            execlp("sort","sort",NULL);
-            
-            exit(54);
-        }
+
+    if(!vfork()){
+
+        close(oo[0]); close(pp[1]);
+
+        dup2(pp[0],0); dup2(oo[1],1); // dup lettura e scrittura
+
+        close(pp[0]); close(oo[1]);
+        
+        execl("/bin/sort","sort",NULL);
+        exit(3);
     }
+
+    if(!vfork()){
+
+        int fds = open("./output_file",  O_CREAT | O_WRONLY |  O_RDONLY | O_TRUNC | O_APPEND, 0777);
+        lseek(fds, 1, SEEK_CUR);    /*Si posiziona alla fine del file*/ 
+
+        close(pp[0]); close(pp[1]); close(oo[1]);
+        
+        dup2(oo[0],0); // dup scrittura
+        dup2(fds,1);
+
+        close(oo[0]);
+        
+        execl("/bin/grep","grep",argv[1],NULL);
+        exit(4);
+    }
+
+    else{
+        exit(5);
+    }
+
     return 0;
 }

@@ -1,7 +1,3 @@
-scrivere un programma che esegua il comando di shell “ls -l| sort| grep <pat>” con tre processi distinti
-
-1-> ls -l
-2-> sort
-3-> grep <pat>
-
-
+scrivere un programma che esegua il comando di shell 
+“ls -l| sort| grep <pat>” con tre processi distinti
+e scrivere l'output su un file "output_file"
