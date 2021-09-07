@@ -15,7 +15,9 @@
     
 --------> Basati su memoria
 
-    sem_init( &nome_semaforo, 0, max_number);
+    sem_init( &nome_semaforo, 0, max_number);  
+    						  1 -> for process
+    						  0	-> for thread
     
     sem_wait(sem);
     
