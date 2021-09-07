@@ -1,4 +1,4 @@
-n processo padre crea N (N numero pari) processi figli. 
+Un processo padre crea N (N numero pari) processi figli. 
 Ciascun processo figlio Pi e' identificato da una variabile intera i (i=0,1,2,3...,N-1). 
 E’ necessario gestire due casi, sulla base di un argomento da riga di comando:
     Se argv[1] è uguale ad 'a' ogni processo figlio Pi, con i pari, manda un segnale (SIGUSR1) al processo Pi+1;

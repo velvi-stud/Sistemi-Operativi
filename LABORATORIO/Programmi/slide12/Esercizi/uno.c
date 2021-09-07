@@ -32,7 +32,7 @@ void _fpari(){
 	close(fifoeven);
 	write(fifotot, &somma, sizeof(int));
 	close(fifotot);
-	printf("\nsomma figlio pari = %d",somma);
+	printf("\nsomma figlio pari = %d\n",somma);
 }
 
 void _fdispari(){
@@ -45,7 +45,7 @@ void _fdispari(){
 	close(fifoodd);
 	write(fifotot, &somma, sizeof(int));
 	close(fifotot);
-	printf("\nsomma figlio dispari = %d", somma);
+	printf("\nsomma figlio dispari = %d\n", somma);
 }
 
 void _padre(){
@@ -88,6 +88,8 @@ int main(){
 	mkfifo("./fifopari", 0777);
 	mkfifo("./fifodispari", 0777);
 	mkfifo("./fifotot", 0777);
+	
+	printf("\n Inserire i numeri, terminare inserendo -1; \n");
 
 	if(!fork()){ // figlio pari
 		_fpari();
