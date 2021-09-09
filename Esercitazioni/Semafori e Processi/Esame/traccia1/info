@@ -1,0 +1,101 @@
+In un sistema sono attivi N processi dotati di un credito C. 
+Ogni processo genera un numero casuale P in [1..C] e verifica se il proprio P è maggiore di quello degli altri processi (a parità di P vince il processo con PID minore). 
+Il processo vincitore (quello con P maggiore) aggiunge al proprio credito C le quantità P generate da tutti gli altri
+processi che invece sottragono al proprio credito C la quantità P generata. Un processo con credito C=0 termina.
+Discutere la soluzione proposta in termini di possibili situazioni di starvation/deadlock e, nel caso, si propongano soluzioni ammissibili.
+
+
+
+//* SVOLTO IN SEGUITO *//
+
+int box = -1
+int bpid = -1
+int pd = 0
+int ready = 0
+int last = -1
+
+mutex lasts = 0;
+
+mutex bbp = 1;
+
+mutex go = 0
+cond c;
+
+mutex ch = 0 ;
+
+mutex cmon = 1 ;
+
+mutex ccc = 1;
+
+mutex finiti = 0;
+
+mutex lt=1;
+int join = N;
+
+void azard(){
+	int G = 100;
+	int lookfor = 0;
+	
+	while(G>0){
+	
+		wait(lt);
+		if(lt<=0){
+			signal(lt);
+			printf("\nnho vinto\n")
+			return;
+		}
+		signal(lt);
+		
+		if(lookfor){ // nella precedente iterazione ho fatto un massimo
+			wait(bbp)
+			if(BP == pthread_self){ // se sono il vincitore
+				G += pd // accredito
+				box=-1  	/* resetto le variabili */
+		        pd=0		/* resetto le variabili */
+		        ready = 0	/* resetto le variabili */
+			}
+			else{ // qualcun altro mi ha superato
+				G-=P;
+			}
+			signal(bbp)
+        }
+        
+        
+        P = 1+rand()%G // ESTRAGGO
+        
+        if(last == pthread_self){ // se sono l'ultimo
+	        sleep(2); //aspetto un tot
+        	pthread_cond_broadcast(cond); // risveglio tutti
+        }
+        else{ // se non sono stato l'ultimo
+			pthread_cond_wait(cond,go) // aspetto lo sblocco dei thread	
+        }
+
+		wait(bbp)
+			if(P>box){ // SE HO VINTO
+				pd += box; // incremento il valore della ricomensa
+				box = P; // aggiorno il valore da superare
+				BP=pthread_self(); // aggiorno l'id del vincitore
+				lookfor = 1;
+			}
+			else if (P<box || (P==box && BP<pthread_self())) { // SE NO
+				G -= P; // tolgo P da G
+				pd += P;	//aumento ricompensa in gioco
+			}
+			if(ready++>=N){ // se sono l'ultimo
+				last = pthread_self(); // setto la variabile last in modo tale che successivamente, sblocco tutti i processi in attesa che finisca
+			}
+		signal(bbp)
+		
+	}
+	
+	if(G<0){ // esco perchè ho perso
+		wait(lt);
+		join --;
+		signal(lt);
+	}
+	
+	return;	
+}
+
+
