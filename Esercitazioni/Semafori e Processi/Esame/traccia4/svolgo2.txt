@@ -1,0 +1,109 @@
+/*
+Nella sala prove del giovane talentuoso chitarrista Matteo Mancuso possono entrare e trovare posto seduto al più
+N appassionati chitarristi per una Masterclass con Matteo. I partecipanti rimasti in piedi seguiranno il seminario
+successivo. Ogni allievo che ha trovato posto può richiedere ad un collaboratore di Matteo Mancuso un modello di
+chitarra degli M modelli messi a disposizione dalla casa produttrice, di cui Matteo Mancuso è testimonial,
+considerando che per ogni modello ci sono K chitarre. Quando tutti gli N allievi hanno la propria chitarra, Matteo
+suona un pezzo semplice chiedendo a tutti gli allievi di suonarlo insieme a lui. La Masterclass termina quando non
+ci sono più chitarristi in attesa.
+*/
+
+
+#define N = 20
+#define M = 5
+#define K = 4
+
+// M+K = N
+
+#define A //students incoming
+int a;
+int xxx = ceil(A/N);
+
+semaphor posti = N
+
+mutex m[M]
+int guitar [M][K] all of 0
+
+mutex chose = 1
+int pick = 0
+
+mutex start = 0;
+mutex next = 0;
+
+cond_t cond;
+mutex mut;
+
+cond_t cond2
+mutex mut2
+
+void student(){
+
+	cond_wait(cond, mut);
+
+	wait(posti)
+	int I=-1;
+	int J=-1;
+	
+	for i = 0 to M{
+	
+		lock(m[i])
+		for j = 0 to K{
+			if (guitar[i][j]==0){
+				I=i;
+				J=j;
+				break;
+				// Allievo prende la chitarra
+			}
+		}	
+		unlock(m[i]);
+		
+		if(I!=-1 && J!=-1){
+			lock(chose)
+				pick++;
+				a--;
+				if(pick>=N || a<=0){
+					unlock(start);
+				}
+			unlock(chose)
+			break;
+		}
+	}
+	
+	//<SUONANO>
+	cond_wait(cond2,mut2) // aspetta finisca la masterclass
+	
+	lock(chose)
+	pick--; // liberano il posto
+	if(pick<=0){
+		unlock(next);
+	}
+	unlock(chose);
+	
+	post(posti)
+	
+}
+
+
+void master(){
+
+	while(xxx-->=0){ //VEDERE
+	
+		sleep(1)
+		cond_bcast(cond); // inizia masterclass nuova
+		
+		lock(start) // N allievi muniti di chitarra
+		 //<SUONANO>
+		 
+		 sleep(10)
+		 cond_bcast(cond2); // finita masterclass
+		 
+		 lock(next)
+		 
+		 pick = 0; // resetta contatore
+		 
+	}
+	
+}
+
+
+

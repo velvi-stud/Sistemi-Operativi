@@ -15,122 +15,159 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define N 5 
-
-unsigned long int buf[N], last;
-int x, z, j;
-
-pthread_mutex_t m =  PTHREAD_MUTEX_INITIALIZER; //1
-pthread_mutex_t s = PTHREAD_MUTEX_INITIALIZER;  //0 
-pthread_mutex_t ok = PTHREAD_MUTEX_INITIALIZER; //0 
-pthread_mutex_t b =  PTHREAD_MUTEX_INITIALIZER; //0 
-pthread_mutex_t v =  PTHREAD_MUTEX_INITIALIZER; //1
-pthread_mutex_t me = PTHREAD_MUTEX_INITIALIZER; //0;
+/*
+Nella sala prove del giovane talentuoso chitarrista Matteo Mancuso possono entrare e trovare posto seduto al più
+N appassionati chitarristi per una Masterclass con Matteo. I partecipanti rimasti in piedi seguiranno il seminario
+successivo. Ogni allievo che ha trovato posto può richiedere ad un collaboratore di Matteo Mancuso un modello di
+chitarra degli M modelli messi a disposizione dalla casa produttrice, di cui Matteo Mancuso è testimonial,
+considerando che per ogni modello ci sono K chitarre. Quando tutti gli N allievi hanno la propria chitarra, Matteo
+suona un pezzo semplice chiedendo a tutti gli allievi di suonarlo insieme a lui. La Masterclass termina quando non
+ci sono più chitarristi in attesa.
+*/
 
 
+#define N 5
+#define M 2
+#define K 3
+// M*K = N
 
-void *thfun(){
-    printf("\n ++++ %lu Entro processo figlio \n",pthread_self());
-    while(1){
-		pthread_mutex_lock(&ok);
-        printf("\n ++++ %lu Entro in ok \n",pthread_self());
-		pthread_mutex_lock(&m);
-		if(z<N && buf[x]==-1){ // se ci sono numeri da estrarre e se la posizione estratta è da assegnare
-			printf("\n ++++ %lu ottenuto numero %d \n",pthread_self(),z);
-            buf[x] = pthread_self();
-			z++;
-			last = pthread_self();
-			pthread_mutex_unlock(&s); // sblocco il coordinatore 
-			pthread_mutex_unlock(&m);
+#define A  12//students incoming
+
+int a = A;
+
+int xxx = ceil(A/N);
+
+sem_t posti; // N	
+
+pthread_mutex_t m [M];
+
+int guitar [M][K]; // all of 1
+
+pthread_mutex_t chose = PTHREAD_MUTEX_INITIALIZER; //1
+int pick = 0;
+
+pthread_mutex_t start= PTHREAD_MUTEX_INITIALIZER; //0
+pthread_mutex_t next= PTHREAD_MUTEX_INITIALIZER; //0
+
+pthread_cond_t cond= PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mut= PTHREAD_MUTEX_INITIALIZER;
+
+pthread_cond_t cond2 = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mut2= PTHREAD_MUTEX_INITIALIZER;
+
+void *student(){
+
+	printf("\n Entra %ld \n",pthread_self());
+
+	int I = -1;
+	int J = -1;
+
+	sem_wait(&posti);
+
+	pthread_cond_wait(&cond, &mut); // Aspetta l'ok del maestro
+	pthread_mutex_unlock(&mut);
+
+	printf("\n %ld trova posto\n",pthread_self());
+
+	for(int i =0; i<M; i++){
+	
+		pthread_mutex_lock(&m[i]);
+		for (int j=0;j<K;j++){
+			if (guitar[i][j]==0){
+				guitar[i][j]=pthread_self();
+				I=i;
+				J=j;
+				printf("\n %ld, sceglie la chitarra [%d][%d]\n",pthread_self(),I,J);
+				break;
+			}
+		}	
+		pthread_mutex_unlock(&m[i]);
+
+		if(I!=-1 && J!=-1){
+			pthread_mutex_lock(&chose);
+				pick++;
+				a--;
+				if(pick>=N || a<=0){
+					pthread_mutex_unlock(&start);
+				}
+			pthread_mutex_unlock(&chose);
 			break;
 		}
-		else if(z >= N){ // estratti tutti i numeri
-            printf("\n ++++ %lu estrazione finita \n",pthread_self());
-			pthread_mutex_unlock(&m);
-			return NULL; // esco
+	}
+	
+	//<SUONANO>
+	// printf("\n %ld, STA SUONANDO \n",pthread_self());
+	pthread_cond_wait(&cond2,&mut2); // aspetta finisca la masterclass
+	pthread_mutex_unlock(&mut2);
+
+	pthread_mutex_lock(&chose);
+	printf("\n %ld, Esce dall'aula \n",pthread_self());
+	pick--; // liberano il posto
+	guitar[I][J]=0;
+	if(pick<=0){
+		pthread_mutex_unlock(&next);
+	}
+	pthread_mutex_unlock(&chose);
+	
+	sem_post(&posti);
+	printf("\n %ld, CIAO CIAO \n",pthread_self());
+	
+	return NULL;	
+}
+
+
+void *master(){
+
+	while(xxx-->=0){ //VEDERE
+		printf("\n @@@@MASTER %ld, prepara l'aula\n",pthread_self());
+		sleep(1);
+		pthread_cond_broadcast(&cond); // inizia masterclass nuova
+		printf("\n @@@@MASTER %ld, inizio masterclass\n",pthread_self());
+		pthread_mutex_lock(&start); // N allievi muniti di chitarra
+		 //<SUONANO>
+		 printf("\n @@@@MASTER %ld, STA SUONANDO\n",pthread_self());
+		 sleep(10);
+		 pthread_cond_broadcast(&cond2); // finita masterclass
+		 printf("\n @@@@MASTER %ld, dichiara finita la masterclass\n",pthread_self());
+		 pthread_mutex_lock(&next);
+		 
+		 pick = 0; // resetta contatore
+		 
+	}
+	
+}
+
+int main(){
+
+	sem_init( &posti, 0, N);
+
+	pthread_mutex_t m [M];
+	for (int i = 0; i < M; i++)
+	{
+		m[i]=(pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
+		for (int j = 0; j < K; j++)
+		{
+			guitar[i][j]=0;
 		}
-		else{ // se il buffer era già assegnato, reitero per cercare di aggiudicare un altra posizione 
-			printf("\n ++++ %lu non ce l'ha fatta, reitera \n",pthread_self());
-            pthread_mutex_unlock(&m);
-		}	
-	}
-	
-	pthread_mutex_lock(&v);
-	if (last != pthread_self()){ // non sono l'ultimo processo
-		pthread_mutex_unlock(&v);
-		return NULL;
 	}
 
-	// sono l'ultimo processo
-	printf("**** %lu *****",last);
+	pthread_mutex_lock(&start);//0
+	pthread_mutex_lock(&next); //0
 
-    pthread_mutex_unlock(&me);
+	pthread_t allievi[A], maestro;
 
-	while(j != N){
-		pthread_mutex_lock(&v);
-		printf("\n $$$$ %lu buf[%d]=%lu\n",pthread_self(),j,buf[j]);
-		j++;
-		pthread_mutex_unlock(&me);
-	}
-    
-}
+	pthread_create(&maestro,NULL,master,NULL);
 
-
-
-
-
-void *coor(){
-
-    while (1){
-        printf("\n @@P@@ %lu estraggo numero \n",pthread_self());
-		pthread_mutex_lock(&m);
-		x++; // shoud be random
-        if(z>=N){
-            break;
-        }
-		pthread_mutex_unlock(&m);
-		pthread_mutex_unlock(&ok); // sblocco i child per l'aggiudico della posizione x
-        pthread_mutex_lock(&s); // aspetta che uno di loro abbia scelto e che mi sblocchi per la prossima pesca
-    }
-
-    printf("\n @@P@@ %lu fine estrazione \n",pthread_self());
-	
-	while(j != N){
-		pthread_mutex_lock(&me);
-		printf("\n §§§§ %lu buf[%d]=%lu\n",pthread_self(),j,buf[j]);
-		j++;
-		pthread_mutex_unlock(&v);
+	for (int i = 0; i < A; i++)
+	{
+		pthread_create(&allievi[i],NULL,student,NULL);
 	}
 
-}
+	for (int i = 0; i < A; i++)
+	{
+		pthread_join(allievi[i],NULL);
+	}
 
-int main(int argc, char const *argv[])
-{
-    /* inizializzazione */
-    for (int i = 0; i < N; i++) buf[i]=-1;
-    pthread_mutex_lock(&s);
-    pthread_mutex_lock(&ok);
-    pthread_mutex_lock(&b);
-    pthread_mutex_lock(&me);
-
-    x = -1; // shoud be random
-    z = 0;
-    last = -1;
-    j = 0;
-
-    /* launching */
-
-    pthread_t coordinator;
-    pthread_t child [N];
-
-    pthread_create(&coordinator,NULL,coor,NULL);
-    for (int i = 0; i < 2*N; i++){
-        pthread_create(&child[i],NULL,thfun,NULL);
-    }
-    
-    pthread_join(coordinator,NULL);
-
-    printf("\nTerminated\n");
-    exit(4);
-    return 0;
+	printf("\nTerminated\n");
+	exit(0);
 }

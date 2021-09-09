@@ -1,3 +1,13 @@
+/*
+Nella sala prove del giovane talentuoso chitarrista Matteo Mancuso possono entrare e trovare posto seduto al più
+N appassionati chitarristi per una Masterclass con Matteo. I partecipanti rimasti in piedi seguiranno il seminario
+successivo. Ogni allievo che ha trovato posto può richiedere ad un collaboratore di Matteo Mancuso un modello di
+chitarra degli M modelli messi a disposizione dalla casa produttrice, di cui Matteo Mancuso è testimonial,
+considerando che per ogni modello ci sono K chitarre. Quando tutti gli N allievi hanno la propria chitarra, Matteo
+suona un pezzo semplice chiedendo a tutti gli allievi di suonarlo insieme a lui. La Masterclass termina quando non
+ci sono più chitarristi in attesa.
+*/
+
 cost:
 	N: int: 10
 	M: int: 5 
