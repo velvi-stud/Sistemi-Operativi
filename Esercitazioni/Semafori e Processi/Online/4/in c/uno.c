@@ -16,7 +16,7 @@
 #include <semaphore.h>
 
 #define N 2
-#define M 4
+#define M 6
 #define T 2 //sec
 
 sem_t posti[N]; // all of M
@@ -50,11 +50,11 @@ void *autobus(void *v){
         
         pthread_mutex_lock(&drive[num]); // l'ultimo sblocca la partenza se l'alarm non suona
 			//printf("\n @@@@ %d ULTIMO PASSEGGERO ENTRATO \n",num);
+        pthread_mutex_lock(&mut[num]); // così nessun altro passeggero vede i posto
         
 		printf("\n @@@@ %d SI PARTE \n",num);
         
         pthread_cond_broadcast(&cond[num]); // avviso i passeggeri che stiamo per partire
-        pthread_mutex_lock(&mut[num]); // così nessun altro passeggero vede i posto
         
 		// -> DRIVE
 
@@ -67,10 +67,12 @@ void *autobus(void *v){
         occuped[num] = 0; // resetto variabile dei posti
         pthread_mutex_unlock(&mut[num]); // sblocco la verifica dei nuovi passeggeri
     }
+    printf("[%d] ESCOOOOOOOOOOOOOOOOO",num);
 }
 
 
 void *utente(void *v){
+
 
     int num = *(int*) v;
 
@@ -81,33 +83,32 @@ void *utente(void *v){
     pthread_mutex_lock(&mut[num]);
 		full[num]--;
 		occuped[num]++;
-        if (occuped[num]==1){ // first sit
-		printf("\n [%d] %ld frst sit on %d",num,pthread_self(),occuped[num]);
+		
+         if (occuped[num]==1){ // first sit
+        	pthread_mutex_unlock(&mut[num]);
+			printf("\n [%d] %ld frst sit on %d",num,pthread_self(),occuped[num]);
             pthread_mutex_unlock(&startime[num]); 
         }
-        else if(occuped[num]>=M){ // last sit or last passegners
-		printf("\n [%d] %ld last sit on %d",num,pthread_self(),occuped[num]);
+        
+        if(occuped[num]>=M || full[num]<=0){ // last sit or last passegners
+        	pthread_mutex_unlock(&mut[num]);
+			printf("\n [%d] %ld last sit on %d",num,pthread_self(),occuped[num]);
             pthread_mutex_unlock(&drive[num]);
         }
-		else if(full[num]<=0){
-			pthread_mutex_unlock(&drive[num]);
-		}
+        
 		else{
+			pthread_mutex_unlock(&mut[num]);
 			printf("\n [%d] %ld take sit on %d",num,pthread_self(),occuped[num]);
-		}
-    pthread_mutex_unlock(&mut[num]);
+		}		
 
-    // aspetto che l'autista parta 
-    pthread_cond_wait(&cond[num],&ok[num]);
-    pthread_mutex_unlock(&ok[num]);
 
 //	printf("\n %ld GOOOO!!! [%d]\n",pthread_self(),num);
-
+	
     // aspetto che l'autista sia arrivato alla fine
     pthread_cond_wait(&cond2[num],&ok2[num]);
     pthread_mutex_unlock(&ok2[num]);
 
-//    printf("\n %ld ARRIVATI [%d]\n",pthread_self(),num);
+    printf("\n %ld ARRIVATI [%d]\n",pthread_self(),num);
 
     sem_post(&posti[num]);
 	return (void*)NULL;
@@ -138,7 +139,7 @@ int main(){
 
 	printf("\n END DECLARTION MAIN \n");
 
-	int nu = M*N;
+	int nu = M*N+N;
 
 	pthread_t bus[N], user[nu];
 
@@ -157,6 +158,8 @@ int main(){
 		l[i]=i;
         pthread_create(&bus[i],NULL,autobus,&l[i]);
 	}
+
+	sleep(2);
 
 	/* creo e aspetto gli utenti */
     for (int i = 0; i < nu; i++)
