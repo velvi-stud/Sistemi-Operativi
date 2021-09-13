@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/file.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include "apue.h" 
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <signal.h>
+#include <math.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define N 5
+#define M 10
+#define T 20 //s
+
+sem_t posti[N]; // all of M
+pthread_mutex_t mut[N]; // all of 1
+int occuped[N]; //all of 0
+
+pthread_mutex_t drive[N], startime[N]; // all of 0
+
+pthread_cond_t cond[N]; 
+pthread_mutex_t ok[N];
+
+pthread_cond_t cond2[N]; 
+pthread_mutex_t ok2[N];
+
+pthread_mutex_t varmut[N]; // all of 1
+int vartemp[N]; // all of 0;
+
+void timepass(){
+    for(int i=0;i<N;i++){
+        lock(varmut[num]);
+        if(vartemp[i]){
+            unlock(drive[num]);
+        }
+        unlock(varmut[num]);
+    }
+}
+
+void autobus(void v){
+    int num = (int) v;
+    while(1){
+        
+        lock(startime[num]); // il primo ad entrare fa partire l'allame
+        signal(SIGALRM,timepass); // unlock(drive[num]);
+            lock(varmut[num]);
+            vartemp[num]=1; // set wairing bus
+            unlock(varmut[num]);
+        alarm(T); // START ALATM
+        
+        lock(drive[num]); // l'ultimo sblocca la partenza se l'alarm non suona
+        signal(SIGALRM,SIG_IGN); // ignoro segnale
+            lock(varmut[num]);
+            vartemp[num]=0; // reset waiting bus
+            unlock(varmut[num]);
+        
+        
+        pthread_cond_broadcast(cond[num]); // avviso i passeggeri che stiamo per partire
+        lock(mut[num]); // così nessun altro passeggero vede i posto
+        // -> DRIVE
+        
+        pthread_cond_broadcast(cond2[num]); // dico ai passeggeri che siamo arrivati
+        occuped[num] = 0; // resetto variabile dei posti
+        unlock(mut[num]); // sblocco la verifica dei nuovi passeggeri
+    }
+}
+
+
+void utente(void v){
+
+    int num = (int) v;
+
+    printf("\n %ld Aspetta il bus \n",pthread_self());
+
+    wait(posti[num]);
+    
+    printf("\n %ld Si siede il bus \n",pthread_self());
+
+    lock(mut[num]);
+        if (++occuped[num]==1){ // first sit
+            printf("\n %ld è il primo \n",pthread_self());
+            unlock(startime[num]); 
+        }
+        else if(++occuped[num]==M){ // last sit
+            printf("\n %ld è l'ultimo \n",pthread_self());
+            unlock(drive[num]);
+        }
+    unlock(mut[num]);
+
+    // aspetto che l'autista parta 
+    pthread_cond_wait(cond[num],ok[num]);
+    unlock(ok[num]);
+
+    // aspetto che l'autista sia arrivato alla fine
+    pthread_cond_wait(cond2[num],ok2[num]);
+    unlock(ok2[num]);
+
+    printf("\n %ld Esce dal bus \n",pthread_self());
+    post(posti[num]);
+}
+
+
+int main(){
+
+    for (int i=0; i<N; i++){
+        pthread_create(bus[i],NULL,autobus,i);
+    }
+
+    for (int i = 0; i < 6*N; i++)
+    {
+        pthread_create(user[i],NULL,utente,i*N);
+    }
+
+    for (int i = 0; i < 6*N; i++)
+    {
+        pthread_join(user[i],NULL);
+    }
+    
+}
