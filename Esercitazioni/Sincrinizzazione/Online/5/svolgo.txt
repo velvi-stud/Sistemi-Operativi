@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/file.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include "apue.h" 
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <signal.h>
+#include <math.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define max 20
+
+mutex_t ingresso;
+mutex_t uscita;
+
+sem_t enter; // to max
+
+mutex_t mut; // =1
+int occupied; // =0
+
+void user_s (int num){
+
+    int all = 0;
+
+    while (all>=num){ // entro 
+
+        wait(enter);
+
+        lock(mut);
+        occupied++;
+        all++;
+        unlock(mut);
+
+    }
+
+    for (int i = 1; i <= num; i++){
+        lock(ingresso);
+        pritnf("\n [%ld] Auto %d gruppo entrata \n",pthread_self(),i);
+        unlock(ingresso);
+    }
+
+    //-> parcheggio
+    sleep(2*num);
+
+    for (int i = 0; i < num; i++){ // esco
+        
+        lock(uscita);
+
+        lock(mut);
+        occupied--;
+        unlock(mut);
+
+        unlock(uscita);
+
+        signal(enter);
+    }
+
+}
