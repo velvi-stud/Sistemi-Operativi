@@ -1,0 +1,3 @@
+Processo prod. e cons.
+Il processo prod. genera un numero casuale da 1 a MAX per N volte e invio un intero per volta al processo cons.
+Il Processo cons. una volta ricevuti N interi fa la somma di questi interi e invia la somma al processo produttore.
